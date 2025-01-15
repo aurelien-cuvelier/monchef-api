@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Chef_ranks {
+  APPRENTICE_CHEF
+  SOUS_CHEF
+  EXECUTIVE_CHEF
+  HEAD_CHEF
+  MICHELIN_STARRED_CHEF
+  CHEF_PATRON
+  MASTER_CHEF
+  CULINARY_DIRECTORY
+}
+
+enum Meal_type {
+  MAIN_DISH
+  STARTER
+  SIDE_DISH
+  DESSERT
+  SNACK
+}
+
+enum Tags {
+  VEGAN
+  VEGETARIAN
+  GLUTEN_FREE
+  DAIRY_FREE
+  LOW_CARB
+  PALEO
+  KOSHER
+  HALAL
+}
+
+enum Difficulty {
+  EASY
+  MEADIUM
+  HARD
+}
+
+model User {
+
+  id       Int     @id @unique @default(autoincrement())
+  username String  @unique
+  address  String  @unique
+  avatar   String?
+  bio      String?
+  country  Int
+  twitter  String?
+  discord  String?
+
+  chef_rank Chef_ranks
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  recipes Recipe[] @relation("CreatedRecipes")
+  reviews Review[] @relation("CreatedReviews")
+
+  countryFk Country @relation("UserCountry", fields: [country], references: [id])
+
+  followers Follow[] @relation("Following")
+  following Follow[] @relation("Followers")
+
+  @@map("users")
+}
+
+model Follow {
+
+  followerId Int
+  follower   User @relation("Followers", fields: [followerId], references: [id])
+
+  followingId Int
+  following   User @relation("Following", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId])
+  @@map("followes")
+}
+
+model Recipe {
+
+  id Int @id @unique @default(autoincrement())
+
+  name           String
+  description    String
+  country        String //ISO 3166
+  images         String[]
+  duration       Int //minutes
+  diffulty       Difficulty
+  items          Json //Not sure yet, probably something like {ingredient:Ingredient.id,qty:5,unit:'kg'}[]...
+  recipe         String //The actual cooking instructions
+  meal_role      Meal_type
+  tags           Tags
+  overall_rating Decimal //1, 1.5, 2, 2.5, ..., 5
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  created_by      Int //user who created the recipe
+  recipeCreatorFk User @relation("CreatedRecipes", fields: [created_by], references: [id])
+
+  reviews Review[] @relation("ReviewedRecipes")
+
+  @@map("recipes")
+}
+
+model Review {
+
+  id         Int      @id @unique @default(autoincrement())
+  created_at DateTime @default(now())
+
+  reviewed_by    Int
+  reviewAuthorFk User @relation("CreatedReviews", fields: [reviewed_by], references: [id])
+
+  reviewed_recipe   Int
+  reviewedRecipedFk Recipe[] @relation("ReviewedRecipes")
+
+  @@map("reviews")
+}
+
+model Ingredient {
+
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  thumbnail   String?
+
+  @@map("ingredients")
+}
+
+model Country {
+  //ISO 3166
+
+  id Int @id @default(autoincrement())
+
+  name String
+  a2   String
+  a3   String
+  flag String
+
+  users User[] @relation("UserCountry")
+
+
+  @@map("countries")
+}
