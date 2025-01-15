@@ -19,10 +19,11 @@ export const IS_PRODUCTION = process.env.NODE_ENV !== "production";
 })();
 
 export function getDatabaseUrl(): string {
-  const val = process.env.DATABASE_URL;
+  const dbEnvKey = IS_PRODUCTION ? "DATABASE_URL" : "DATABASE_URL_DEV";
+  const val = IS_PRODUCTION ? process.env[dbEnvKey] : process.env[dbEnvKey];
 
   if (!val) {
-    globalLogger.fatal("Missing DATABASE_URL in ENV!");
+    globalLogger.fatal(`Missing ${dbEnvKey} in ENV!`);
     process.exit(1);
   }
 
