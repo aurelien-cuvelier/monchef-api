@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // Modern syntax, aligns with Node.js LTS support
+    "module": "NodeNext", // Use ES modules for modern imports/exports
+    //"moduleResolution": "Node", // Node.js-style resolution for modules
+    "outDir": "./dist", // Output directory for compiled JavaScript
+    "rootDir": "./src", // Root directory for TypeScript source files
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Interop for importing CommonJS modules
+    "skipLibCheck": true, // Speeds up build by skipping checks on `.d.ts` files
+    "forceConsistentCasingInFileNames": true, // Enforce consistent file name casing
+    "allowSyntheticDefaultImports": true, // Allow default imports from CommonJS modules
+    "noEmitOnError": true, // Stop builds if there are type errors
+    "resolveJsonModule": true, // Enable JSON file imports
+    "useDefineForClassFields": true, // Align class fields with ESNext spec
+    "experimentalDecorators": true, // Enable experimental decorator syntax
+    "emitDecoratorMetadata": true, // Emit metadata for decorators (if using frameworks like TypeORM)
+    "isolatedModules": true, // Enforce ES module behavior
+    "typeRoots": ["./node_modules/@types"] // Include type definitions from node_modules
+  },
+  "include": ["src/**/*.ts"], // Include all TypeScript files in the `src` folder
+  "exclude": [
+    "node_modules", // Exclude dependencies
+    "dist", // Exclude build output
+    "tests", // Optionally exclude test files during build
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}
