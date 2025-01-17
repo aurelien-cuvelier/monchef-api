@@ -25,8 +25,6 @@ export async function initIngredients(): Promise<void> {
       throw new Error(`Status code: ${res.status}`);
     }
 
-    console.log(res.data);
-
     const createManyIngredientPayload: Prisma.IngredientCreateInput[] =
       res.data.meals.map((ingredient) => {
         return {

@@ -20,6 +20,7 @@
     "axios": "^1.7.9",
     "dotenv": "^16.4.7",
     "fastify": "^5.2.1",
+    "fastify-zod": "^1.4.0",
     "http-status-codes": "^2.3.0",
     "itty-time": "^1.0.6",
     "pino": "^9.6.0",
