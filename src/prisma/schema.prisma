@@ -20,10 +20,8 @@ enum Chef_ranks {
 
 enum Meal_type {
   MAIN_DISH
-  STARTER
   SIDE_DISH
   DESSERT
-  SNACK
 }
 
 enum Tags {
@@ -43,8 +41,17 @@ enum Difficulty {
   HARD
 }
 
-model User {
+enum Units {
+  GRAM
+  KILOGRAM
+  MILILITER
+  LITER
+  TABLESPOON
+  TEASPOON
+  PIECE
+}
 
+model User {
   id       Int     @id @unique @default(autoincrement())
   username String  @unique
   address  String  @unique
@@ -59,76 +66,107 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  //Each user can create several recipes
   recipes Recipe[] @relation("CreatedRecipes")
+
+  //Each user can create several reviews
   reviews Review[] @relation("CreatedReviews")
 
+  //Each user has a single country
   countryFk Country @relation("UserCountry", fields: [country], references: [id])
 
+  //Each user can have several followers
   followers Follow[] @relation("Following")
+
+  //Each user can follow several users
   following Follow[] @relation("Followers")
 
   @@map("users")
 }
 
 model Follow {
-
   followerId Int
+  
+  //The user who is following
   follower   User @relation("Followers", fields: [followerId], references: [id])
 
   followingId Int
+
+  //Who the follower is following
   following   User @relation("Following", fields: [followingId], references: [id])
 
   @@id([followerId, followingId])
-  @@map("followes")
+  @@map("follows")
 }
 
 model Recipe {
-
-  id Int @id @unique @default(autoincrement())
-
+  id             Int           @id @unique @default(autoincrement())
   name           String
   description    String
-  country        String //ISO 3166
+  country        String        // ISO 3166
   images         String[]
-  duration       Int //minutes
+  duration       Int           // minutes
   diffulty       Difficulty
-  items          Json //Not sure yet, probably something like {ingredient:Ingredient.id,qty:5,unit:'kg'}[]...
-  recipe         String //The actual cooking instructions
+  recipe         String        // Cooking instructions
   meal_role      Meal_type
   tags           Tags
-  overall_rating Decimal //1, 1.5, 2, 2.5, ..., 5
+  overall_rating Decimal        // 1, 1.5, 2, 2.5, ..., 5
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
 
-  created_by      Int //user who created the recipe
-  recipeCreatorFk User @relation("CreatedRecipes", fields: [created_by], references: [id])
+  created_by     Int
+  //A recipe is created by a single user
+  recipeCreatorFk User         @relation("CreatedRecipes", fields: [created_by], references: [id])
 
-  reviews Review[] @relation("ReviewedRecipes")
+  //A recipe can have several reviews
+  reviews        Review[]      @relation("ReviewedRecipes")
+
+  //A recipe is composed of several items [ingredient_id,unit,quantity]
+  items          Recipe_item[]
 
   @@map("recipes")
 }
 
-model Review {
+model Recipe_item {
+  id           Int     @id @unique @default(autoincrement())
+  ingedient_id Int
+  unit         Units
+  quantity     Decimal
 
+  recipe_id    Int
+  //A recipe item is linked to a single recipe
+  recipe       Recipe @relation(fields: [recipe_id], references: [id]) // Connect Recipe_item to Recipe
+
+  //A recipe item is linked to a single ingredient
+  ingredient   Ingredient @relation(fields: [ingedient_id], references: [id])
+
+  @@map("recipe_items")
+}
+
+model Review {
   id         Int      @id @unique @default(autoincrement())
   created_at DateTime @default(now())
 
   reviewed_by    Int
+  //A review has a single author
   reviewAuthorFk User @relation("CreatedReviews", fields: [reviewed_by], references: [id])
 
   reviewed_recipe   Int
-  reviewedRecipedFk Recipe[] @relation("ReviewedRecipes")
+  //A review belongs to a single recipe
+  reviewedRecipedFk Recipe @relation("ReviewedRecipes", fields: [reviewed_recipe], references: [id])
 
   @@map("reviews")
 }
 
 model Ingredient {
-
   id          Int     @id @default(autoincrement())
   name        String
   description String?
   thumbnail   String?
+
+  //An ingredient can be used in several recipe items
+  used_in Recipe_item[]
 
   @@map("ingredients")
 }
@@ -143,8 +181,8 @@ model Country {
   a3   String
   flag String
 
+  //A country can have several users
   users User[] @relation("UserCountry")
-
 
   @@map("countries")
 }
