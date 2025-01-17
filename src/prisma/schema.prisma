@@ -179,7 +179,7 @@ model Country {
   name String
   a2   String
   a3   String
-  flag String
+  flag String?
 
   //A country can have several users
   users User[] @relation("UserCountry")
