@@ -1,18 +1,6 @@
 import pino from "pino";
-import * as genShortUUID from "short-uuid";
+import { LOGGER_CONFIG } from "./shared";
 
-const backend_id = genShortUUID.generate();
 
-export const globalLogger = pino({
-  base: {
-    backend_id,
-  },
-  customLevels: {
-    fatal: 80,
-  },
-  formatters: {
-    level: (label) => {
-      return { level: label.toUpperCase() };
-    },
-  },
-});
+
+export const globalLogger = pino(LOGGER_CONFIG);

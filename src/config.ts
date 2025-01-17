@@ -16,6 +16,7 @@ export const IS_PRODUCTION = process.env.NODE_ENV !== "production";
   }
 
   getDatabaseUrl();
+  getAppPort();
 })();
 
 export function getDatabaseUrl(): string {
@@ -28,4 +29,15 @@ export function getDatabaseUrl(): string {
   }
 
   return val;
+}
+
+export function getAppPort(): number {
+  const val = process.env.APP_PORT;
+
+  if (!val || isNaN(Number(val))) {
+    globalLogger.fatal(`Missing APP_PORT in ENV!`);
+    process.exit(1);
+  }
+
+  return Number(val);
 }
