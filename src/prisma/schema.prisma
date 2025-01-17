@@ -161,7 +161,7 @@ model Review {
 
 model Ingredient {
   id          Int     @id @default(autoincrement())
-  name        String
+  name        String @unique()
   description String?
   thumbnail   String?
 

@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import  axios  from "axios";
 import { LoggerOptions } from "pino";
 import * as genShortUUID from "short-uuid";
 
@@ -7,6 +8,8 @@ const BACKEND_ID = genShortUUID.generate();
 export const prisma = new PrismaClient({
   log: ["info"],
 });
+
+export const axiosClient = axios
 
 export const LOGGER_CONFIG: LoggerOptions = {
   base: {

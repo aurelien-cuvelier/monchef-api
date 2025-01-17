@@ -21,7 +21,7 @@ export const startApp = async () => {
   try {
     await server.listen({ port: getAppPort(), host: "0.0.0.0" });
   } catch (e: unknown) {
-    globalLogger.fatal(`Could not start app`, e);
+    globalLogger.fatal(e, "Could not start app");
     process.exit(1);
   }
 };

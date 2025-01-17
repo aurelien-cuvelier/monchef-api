@@ -6,6 +6,7 @@ import { globalLogger } from "./logger";
 import { prisma } from "./shared";
 
 const START_APP = true;
+const START_MAIN = true;
 
 globalLogger.info(
   `New backend instance starting [IS_PRODUCTION: ${IS_PRODUCTION}]`
@@ -17,4 +18,12 @@ prisma.$queryRaw`SELECT NOW()`
 
 if (START_APP) {
   startApp();
+}
+
+if (START_MAIN) {
+  main();
+}
+
+async function main() {
+  //await initIngredients();
 }
