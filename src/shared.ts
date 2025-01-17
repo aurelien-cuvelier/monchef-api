@@ -24,3 +24,5 @@ export const LOGGER_CONFIG: LoggerOptions = {
     },
   },
 };
+
+export const EVM_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;

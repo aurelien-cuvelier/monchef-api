@@ -5,6 +5,8 @@ import { getAppPort } from "../config";
 import { globalLogger } from "../logger";
 import { LOGGER_CONFIG } from "../shared";
 import ingredientsRoutes from "./ingredients/ingredients.routes";
+import usersRoutes from "./users/users.routes";
+import { userSchemas } from "./users/users.schema";
 
 //For consistency purposes, EVERY PUBLIC endpoint should implement the same interface for responses
 //This one complies with fastify generated errors
@@ -18,8 +20,14 @@ const server = fastify({
   logger: LOGGER_CONFIG,
 });
 
+//Add schemas BEFORE register the route or it won't work
+for (const schema of userSchemas) {
+  server.addSchema(schema);
+}
+
 //All the different routes should be registered here
 server.register(ingredientsRoutes, { prefix: "ingredients/" });
+server.register(usersRoutes, { prefix: "users/" });
 
 server.get("/healthcheck", async (_, reply) => {
   reply.code(StatusCodes.OK).send({

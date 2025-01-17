@@ -57,11 +57,11 @@ model User {
   address  String  @unique
   avatar   String?
   bio      String?
-  country  Int
+  country  String
   twitter  String?
   discord  String?
 
-  chef_rank Chef_ranks
+  chef_rank Chef_ranks @default(APPRENTICE_CHEF)
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
@@ -73,7 +73,7 @@ model User {
   reviews Review[] @relation("CreatedReviews")
 
   //Each user has a single country
-  countryFk Country @relation("UserCountry", fields: [country], references: [id])
+  countryFk Country @relation("UserCountry", fields: [country], references: [a3])
 
   //Each user can have several followers
   followers Follow[] @relation("Following")
@@ -124,6 +124,9 @@ model Recipe {
 
   //A recipe is composed of several items [ingredient_id,unit,quantity]
   items          Recipe_item[]
+
+    //Each recipe has a single country
+  countryFk Country @relation("RecipeCountry", fields: [country], references: [a3])
 
   @@map("recipes")
 }
@@ -176,13 +179,15 @@ model Country {
 
   id Int @id @default(autoincrement())
 
-  name String
-  a2   String
-  a3   String
+  name String @unique()
+  a2   String @unique()
+  a3   String @unique()
   flag String?
 
   //A country can have several users
   users User[] @relation("UserCountry")
+
+  recipes Recipe[] @relation("RecipeCountry")
 
   @@map("countries")
 }
