@@ -1,3 +1,4 @@
+import { StatusCodes } from "http-status-codes";
 import supertest from "supertest";
 import { Web3 } from "web3";
 const determStringify = require("fast-json-stable-stringify");
@@ -25,14 +26,31 @@ test("Create a new user", async () => {
     country: "USA",
   };
 
+  let response = await app.post("/users/create").send(payload);
+  expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
+
   const hashedPayload = provider.utils.sha3(determStringify(payload)) as string;
   const sig = account.sign(hashedPayload);
 
-  const response = await app
+  response = await app
     .post("/users/create")
     .set("x-wallet-signature", sig.signature)
     .send(payload);
 
-  expect(response.statusCode).toBe(200);
+  expect(response.statusCode).toBe(StatusCodes.OK);
   expect(JSON.parse(response.text)).toHaveProperty("id");
+
+  response = await app
+    .post("/users/create")
+    .set("x-wallet-signature", sig.signature)
+    .send(payload);
+  expect(response.statusCode).toBe(StatusCodes.CONFLICT);
+
+  payload.address = provider.eth.accounts.create().address;
+
+  response = await app
+    .post("/users/create")
+    .set("x-wallet-signature", sig.signature)
+    .send(payload);
+  expect(response.statusCode).toBe(StatusCodes.FORBIDDEN);
 });
