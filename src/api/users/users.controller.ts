@@ -1,7 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { ApiReturnDataInterface } from "../app";
-import { CreateUserInput, CreateUserResponseType } from "./users.schema";
+import {
+  CreateUserInput,
+  CreateUserResponseType,
+  createUserSchema,
+} from "./users.schema";
 import { createUserInDb } from "./users.service";
 
 export async function createUserHandler(
@@ -11,6 +15,8 @@ export async function createUserHandler(
   }>
 ) {
   try {
+    request.body = createUserSchema.parse(request.body);
+
     const res = await createUserInDb(request.body);
 
     const { ok } = res;

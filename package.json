@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node ./src/index.ts | npx pino-pretty",
     "prod": "tsc && node ./dist/index.js",
-    "test":"npx jest"
+    "test": "npx jest"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +33,7 @@
     "pino": "^9.6.0",
     "prisma": "^6.2.1",
     "short-uuid": "^5.2.0",
+    "web3": "^4.16.0",
     "zod": "^3.24.1"
   }
 }

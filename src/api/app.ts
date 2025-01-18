@@ -10,9 +10,13 @@ import { userSchemas } from "./users/users.schema";
 
 //For consistency purposes, EVERY PUBLIC endpoint should implement the same interface for responses
 //This one complies with fastify generated errors
-export type ApiReturnDataInterface<T> =
-  | { error: string; message?: string; statusCode: number }
-  | T;
+
+export type ApiReturnErrorInterface = {
+  error: string;
+  message?: string;
+  statusCode: number;
+};
+export type ApiReturnDataInterface<T> = ApiReturnErrorInterface | T;
 
 const STARTED_AT = Date.now();
 

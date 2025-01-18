@@ -10,6 +10,41 @@ export async function createUserInDb(
 > {
   const functionName = createUserInDb.name;
   try {
+    /***
+     * @TODO implement this with OR in a single tx
+     */
+
+    const exists = await prisma.$transaction([
+      prisma.user.findFirst({
+        select: { id: true },
+        where: {
+          address: input.address,
+        },
+      }),
+      prisma.user.findFirst({
+        select: {
+          id: true,
+        },
+        where: {
+          username: input.username,
+        },
+      }),
+    ]);
+
+    const alreadyExists = exists[0]?.id
+      ? `Address`
+      : exists?.[1]
+      ? `Username`
+      : null;
+
+    if (alreadyExists) {
+      return {
+        ok: false,
+        statusCode: StatusCodes.CONFLICT,
+        error: `${alreadyExists} already in use!`,
+      };
+    }
+
     const created = await prisma.user.create({
       data: input,
       select: {
