@@ -17,6 +17,9 @@ importers:
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
+      fast-json-stable-stringify:
+        specifier: ^2.1.0
+        version: 2.1.0
       fastify:
         specifier: ^5.2.1
         version: 5.2.1

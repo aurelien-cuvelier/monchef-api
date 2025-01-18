@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { Web3 } from "web3";
 import { CreateUserInput, CreateUserResponseType } from "../users/users.schema";
+const determStringify = require("fast-json-stable-stringify");
 
 const provider = new Web3(); //provider without RPC because we only wanna use local utils
 
@@ -16,12 +17,11 @@ export function checkWalletSignature(
   const functionName = checkWalletSignature.name;
   try {
     const address = request.body.address.toLowerCase();
-    const hashedPayload = provider.utils.sha3(JSON.stringify(request.body));
+    const hashedPayload = provider.utils.sha3(determStringify(request.body));
 
     if (!hashedPayload) {
       throw new Error(`hashing failed`);
     }
-
 
     const recoveredAddress: Lowercase<string> = provider.eth.accounts
       .recover(hashedPayload, request.headers["x-wallet-signature"])
