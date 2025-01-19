@@ -1,8 +1,11 @@
 import { User } from "@prisma/client";
 import { buildJsonSchemas } from "fastify-zod";
 import z from "zod";
-import { EVM_ADDRESS_REGEX } from "../../shared";
-import { ApiReturnDataInterface } from "../app";
+import {
+  ApiReturnDataInterface,
+  headerWalletSignatureSchema,
+  zodAddress,
+} from "../app";
 
 export type CreateUserResponseType = ApiReturnDataInterface<
   { id: User["id"] } & { ok: true }
@@ -14,12 +17,7 @@ export type getUserResponseType = ApiReturnDataInterface<
 
 const userCore = {
   username: z.string(),
-  address: z
-    .string()
-    .refine((addr) => EVM_ADDRESS_REGEX.test(addr))
-    .transform(
-      (addr): Lowercase<string> => addr.toLowerCase() as Lowercase<string>
-    ),
+  ...zodAddress,
 
   /**
    * @DEV altering methods (eg. transform) are NOT applied when fastify does its things
@@ -34,10 +32,6 @@ const userCore = {
 
 export const createUserSchema = z.object({
   ...userCore,
-});
-
-const headerWalletSignatureSchema = z.object({
-  "x-wallet-signature": z.string().length(132),
 });
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;

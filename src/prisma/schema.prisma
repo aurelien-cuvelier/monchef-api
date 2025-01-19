@@ -37,7 +37,7 @@ enum Tags {
 
 enum Difficulty {
   EASY
-  MEADIUM
+  MEDIUM
   HARD
 }
 
