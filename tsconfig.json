@@ -18,6 +18,6 @@
     "isolatedModules": true, // Enforce ES module behavior
     "typeRoots": ["./node_modules/@types"] // Include type definitions from node_modules
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"], // Include both source and test files
+  "include": ["src/**/*.ts"], // Include all files under src
   "exclude": ["node_modules", "dist"] // Avoid excluding "tests" here
 }

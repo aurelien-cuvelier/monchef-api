@@ -50,11 +50,11 @@ export async function createRecipeInDb(
     const payload: Prisma.RecipeUncheckedCreateInput = {
       name: input.name,
       description: input.description,
-      country: input.country,
+      country_a3: input.country_a3,
       images: input.images,
       duration: input.duration,
       diffulty: input.diffulty,
-      recipe: input.recipe,
+      instructions: input.instructions,
       meal_role: input.meal_role,
       tags: input.tags,
       overall_rating: 0,

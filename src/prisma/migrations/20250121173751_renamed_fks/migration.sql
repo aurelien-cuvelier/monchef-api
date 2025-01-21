@@ -2,7 +2,7 @@
 CREATE TYPE "Chef_ranks" AS ENUM ('APPRENTICE_CHEF', 'SOUS_CHEF', 'EXECUTIVE_CHEF', 'HEAD_CHEF', 'MICHELIN_STARRED_CHEF', 'CHEF_PATRON', 'MASTER_CHEF', 'CULINARY_DIRECTORY');
 
 -- CreateEnum
-CREATE TYPE "Meal_type" AS ENUM ('MAIN_DISH', 'SIDE_DISH', 'DESSERT');
+CREATE TYPE "Meal_role" AS ENUM ('MAIN_DISH', 'SIDE_DISH', 'DESSERT');
 
 -- CreateEnum
 CREATE TYPE "Tags" AS ENUM ('VEGAN', 'VEGETARIAN', 'GLUTEN_FREE', 'DAIRY_FREE', 'LOW_CARB', 'PALEO', 'KOSHER', 'HALAL');
@@ -20,7 +20,7 @@ CREATE TABLE "users" (
     "address" TEXT NOT NULL,
     "avatar" TEXT,
     "bio" TEXT,
-    "country" TEXT NOT NULL,
+    "country_name" TEXT NOT NULL,
     "twitter" TEXT,
     "discord" TEXT,
     "chef_rank" "Chef_ranks" NOT NULL DEFAULT 'APPRENTICE_CHEF',
@@ -47,8 +47,8 @@ CREATE TABLE "recipes" (
     "images" TEXT[],
     "duration" INTEGER NOT NULL,
     "diffulty" "Difficulty" NOT NULL,
-    "recipe" TEXT NOT NULL,
-    "meal_role" "Meal_type" NOT NULL,
+    "instructions" TEXT NOT NULL,
+    "meal_role" "Meal_role" NOT NULL,
     "tags" "Tags"[],
     "overall_rating" DECIMAL(65,30) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -73,8 +73,8 @@ CREATE TABLE "recipe_items" (
 CREATE TABLE "reviews" (
     "id" SERIAL NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "reviewed_by" INTEGER NOT NULL,
-    "reviewed_recipe" INTEGER NOT NULL,
+    "reviewed_by_user_id" INTEGER NOT NULL,
+    "reviewed_recipe_id" INTEGER NOT NULL,
 
     CONSTRAINT "reviews_pkey" PRIMARY KEY ("id")
 );
@@ -131,7 +131,7 @@ CREATE UNIQUE INDEX "countries_a2_key" ON "countries"("a2");
 CREATE UNIQUE INDEX "countries_a3_key" ON "countries"("a3");
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_country_fkey" FOREIGN KEY ("country") REFERENCES "countries"("a3") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_country_name_fkey" FOREIGN KEY ("country_name") REFERENCES "countries"("a3") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "follows" ADD CONSTRAINT "follows_followerId_fkey" FOREIGN KEY ("followerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -152,7 +152,7 @@ ALTER TABLE "recipe_items" ADD CONSTRAINT "recipe_items_recipe_id_fkey" FOREIGN 
 ALTER TABLE "recipe_items" ADD CONSTRAINT "recipe_items_ingedient_id_fkey" FOREIGN KEY ("ingedient_id") REFERENCES "ingredients"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_reviewed_by_fkey" FOREIGN KEY ("reviewed_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_reviewed_by_user_id_fkey" FOREIGN KEY ("reviewed_by_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "reviews" ADD CONSTRAINT "reviews_reviewed_recipe_fkey" FOREIGN KEY ("reviewed_recipe") REFERENCES "recipes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "reviews" ADD CONSTRAINT "reviews_reviewed_recipe_id_fkey" FOREIGN KEY ("reviewed_recipe_id") REFERENCES "recipes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -1,4 +1,4 @@
-import { Chef_ranks, Difficulty, Meal_type, Tags, Units } from "@prisma/client";
+import { Chef_ranks, Difficulty, Meal_role, Tags, Units } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { prisma } from "../../shared";
@@ -24,7 +24,7 @@ export async function getMetadataHandler(
       chefRanks: Object.keys(Chef_ranks) as Chef_ranks[],
       difficulty: Object.keys(Difficulty) as Difficulty[],
       units: Object.keys(Units) as Units[],
-      mealType: Object.keys(Meal_type) as Meal_type[],
+      mealType: Object.keys(Meal_role) as Meal_role[],
       countries,
     };
 

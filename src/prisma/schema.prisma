@@ -18,7 +18,7 @@ enum Chef_ranks {
   CULINARY_DIRECTORY
 }
 
-enum Meal_type {
+enum Meal_role {
   MAIN_DISH
   SIDE_DISH
   DESSERT
@@ -57,7 +57,7 @@ model User {
   address  String  @unique
   avatar   String?
   bio      String?
-  country  String
+  country_a3  String
   twitter  String?
   discord  String?
 
@@ -73,7 +73,7 @@ model User {
   reviews Review[] @relation("CreatedReviews")
 
   //Each user has a single country
-  countryFk Country @relation("UserCountry", fields: [country], references: [a3])
+  country Country @relation("UserCountry", fields: [country_a3], references: [a3])
 
   //Each user can have several followers
   followers Follow[] @relation("Following")
@@ -103,21 +103,21 @@ model Recipe {
   id             Int           @id @unique @default(autoincrement())
   name           String
   description    String
-  country        String        // ISO 3166
+  country_a3        String        // ISO 3166
   images         String[]
   duration       Int           // minutes
   diffulty       Difficulty
-  recipe         String        // Cooking instructions
-  meal_role      Meal_type
+  instructions         String        // Cooking instructions
+  meal_role      Meal_role
   tags           Tags[]
-  overall_rating Decimal        // 1, 1.5, 2, 2.5, ..., 5
+  overall_rating Float        // 1, 1.5, 2, 2.5, ..., 5
 
   created_at     DateTime      @default(now())
   updated_at     DateTime      @updatedAt
 
   created_by     Int
   //A recipe is created by a single user
-  recipeCreatorFk User         @relation("CreatedRecipes", fields: [created_by], references: [id])
+  recipe_creator User         @relation("CreatedRecipes", fields: [created_by], references: [id])
 
   //A recipe can have several reviews
   reviews        Review[]      @relation("ReviewedRecipes")
@@ -126,7 +126,7 @@ model Recipe {
   items          Recipe_item[]
 
     //Each recipe has a single country
-  countryFk Country @relation("RecipeCountry", fields: [country], references: [a3])
+  recipe_country Country @relation("RecipeCountry", fields: [country_a3], references: [a3])
 
   @@map("recipes")
 }
@@ -135,7 +135,7 @@ model Recipe_item {
   id           Int     @id @unique @default(autoincrement())
   ingedient_id Int
   unit         Units
-  quantity     Decimal
+  quantity     Float
 
   recipe_id    Int
   //A recipe item is linked to a single recipe
@@ -151,13 +151,17 @@ model Review {
   id         Int      @id @unique @default(autoincrement())
   created_at DateTime @default(now())
 
-  reviewed_by    Int
-  //A review has a single author
-  reviewAuthorFk User @relation("CreatedReviews", fields: [reviewed_by], references: [id])
+  rating  Float @default(0) //1-5 by 0.5 increment
 
-  reviewed_recipe   Int
+  description String?
+
+  reviewed_by_user_id    Int
+  //A review has a single author
+  reviewer User @relation("CreatedReviews", fields: [reviewed_by_user_id], references: [id])
+
+  reviewed_recipe_id   Int
   //A review belongs to a single recipe
-  reviewedRecipedFk Recipe @relation("ReviewedRecipes", fields: [reviewed_recipe], references: [id])
+  reviewed_recipe Recipe @relation("ReviewedRecipes", fields: [reviewed_recipe_id], references: [id])
 
   @@map("reviews")
 }

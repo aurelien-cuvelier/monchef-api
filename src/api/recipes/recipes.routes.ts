@@ -6,11 +6,12 @@ import {
   checkWalletSignature,
   validateAddressInBody,
 } from "../middlewares/walletSignature";
-import { createRecipeHandler } from "./recipes.controller";
+import { createRecipeHandler, getRecipesHandler } from "./recipes.controller";
 import {
   $ref,
   CreateRecipeInput,
   CreateRecipeResponseType,
+  getRecipesResponseType,
 } from "./recipes.schema";
 
 export default async function recipesRoutes(
@@ -36,4 +37,6 @@ export default async function recipesRoutes(
     },
     createRecipeHandler
   );
+
+  server.get<{ Reply: getRecipesResponseType }>("/", getRecipesHandler);
 }

@@ -1,8 +1,80 @@
-import { Difficulty, Meal_type, Recipe, Tags, Units } from "@prisma/client";
+import {
+  Difficulty,
+  Meal_role,
+  Prisma,
+  Recipe,
+  Tags,
+  Units,
+} from "@prisma/client";
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
 import { EVM_ADDRESS_REGEX } from "../../shared";
 import { ApiReturnDataInterface } from "../app";
+
+type getReceipesSucessFullReponseType = Prisma.RecipeGetPayload<{
+  include: {
+    items: {
+      select: {
+        unit: true;
+        quantity: true;
+        ingredient: {
+          select: {
+            name: true;
+            id: true;
+          };
+        };
+      };
+    };
+    recipe_country: {
+      select: {
+        name: true;
+        a3: true;
+      };
+    };
+    recipe_creator: {
+      select: {
+        username: true;
+        chef_rank: true;
+        country: {
+          select: {
+            name: true;
+            a3: true;
+          };
+        };
+      };
+    };
+    reviews: {
+      select: {
+        id: true;
+        created_at: true;
+        rating: true;
+        reviewer: {
+          select: {
+            username: true;
+            id: true;
+          };
+        };
+        description:true
+      };
+    };
+  };
+}>[];
+
+// id         Int      @id @unique @default(autoincrement())
+// created_at DateTime @default(now())
+
+// rating  Float @default(0) //1-5 by 0.5 increment
+
+// reviewed_by_user_id    Int
+// //A review has a single author
+// reviewer User @relation("CreatedReviews", fields: [reviewed_by_user_id], references: [id])
+
+// reviewed_recipe_id   Int
+// //A review belongs to a single recipe
+// reviewed_recipe Recipe @relation("ReviewedRecipes", fields: [reviewed_recipe_id], references: [id])
+
+export type getRecipesResponseType =
+  ApiReturnDataInterface<getReceipesSucessFullReponseType>;
 
 export type CreateRecipeSuccessfullResponseType = { id: Recipe["id"] } & {
   ok: true;
@@ -29,15 +101,15 @@ const recipeItemCore = {
 const recipeCore = {
   name: z.string(),
   description: z.string(),
-  country: z.string().length(3), //alpha-3
+  country_a3: z.string().length(3), //alpha-3
   images: z.array(z.string()),
   duration: z.number().int(),
   diffulty: z.enum([Difficulty.EASY, Difficulty.HARD, Difficulty.MEDIUM]),
-  recipe: z.string(),
+  instructions: z.string(),
   meal_role: z.enum([
-    Meal_type.DESSERT,
-    Meal_type.MAIN_DISH,
-    Meal_type.SIDE_DISH,
+    Meal_role.DESSERT,
+    Meal_role.MAIN_DISH,
+    Meal_role.SIDE_DISH,
   ]),
   tags: z.array(
     z.enum([
@@ -63,7 +135,8 @@ export const createRecipeSchema = z
     ...recipeCore,
     address: z.string().refine((addr) => EVM_ADDRESS_REGEX.test(addr)),
   })
-  .omit({ overall_rating: true }).strict();
+  .omit({ overall_rating: true })
+  .strict();
 
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
 

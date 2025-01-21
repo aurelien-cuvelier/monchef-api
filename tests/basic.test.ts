@@ -5,6 +5,7 @@ import { getIngredientsSuccessfullResponseType } from "../src/api/ingredients/in
 import { getMetadataSuccessfullResponseType } from "../src/api/metadata/metadata.schema";
 import { CreateRecipeInput } from "../src/api/recipes/recipes.schema";
 import { getRandomIngredientItems, pickRandomElementForArray } from "./utils";
+import { CreateUserInput } from "../src/api/users/users.schema";
 const determStringify = require("fast-json-stable-stringify");
 
 const PORT = 4000;
@@ -57,10 +58,10 @@ test("Get metadata", async () => {
 });
 
 test("Create a new user", async () => {
-  const payload = {
+  const payload:CreateUserInput = {
     username: testUsername,
     address: testAccount.address,
-    country: "USA",
+    country_a3: "USA",
   };
 
   let response = await app.post("/users/create").send(payload);
@@ -112,7 +113,7 @@ Tempus cubilia netus efficitur habitasse faucibus cras. Porta morbi a commodo du
     duration: Math.floor(Math.random() * 120),
     address: testAccount.address,
     tags: randomTags,
-    country: pickRandomElementForArray(metadata.countries).a3,
+    country_a3: pickRandomElementForArray(metadata.countries).a3,
     description:
       "This is a test recipe\nit's not recommended to actually try it as it might no be tasty",
     diffulty: pickRandomElementForArray(metadata.difficulty),
@@ -128,7 +129,7 @@ Tempus cubilia netus efficitur habitasse faucibus cras. Porta morbi a commodo du
       metadata,
       Math.floor(Math.random() * 20)
     ),
-    recipe: recipeText,
+    instructions: recipeText,
     created_by: testUserId,
   };
 

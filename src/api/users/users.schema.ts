@@ -24,7 +24,7 @@ const userCore = {
    */
   avatar: z.string().optional(),
   bio: z.string().optional(),
-  country: z.string().length(3), //alpha-3
+  country_a3: z.string().length(3), //alpha-3
   twitter: z.string().optional(),
   discord: z.string().optional(),
 };
