@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { Web3 } from "web3";
-import { prisma } from "../../shared";
+import { EVM_ADDRESS_REGEX, prisma } from "../../shared";
 import {
   CreateRecipeInput,
   CreateRecipeResponseType,
@@ -21,6 +21,7 @@ export function checkWalletSignature(
 ) {
   const functionName = checkWalletSignature.name;
   try {
+    //console.log(request.body);
     const address = request.body.address.toLowerCase();
     const hashedPayload = provider.utils.sha3(determStringify(request.body));
 
@@ -50,7 +51,7 @@ export function checkWalletSignature(
   done();
 }
 
-export async function checkThatUserExists(
+export function validateAddressInBody(
   request: FastifyRequest<{
     Body: CreateUserInput | CreateRecipeInput;
   }>,
@@ -58,6 +59,37 @@ export async function checkThatUserExists(
     Reply: CreateRecipeResponseType | CreateUserResponseType;
   }>,
   done: HookHandlerDoneFunction
+) {
+  const functionName = validateAddressInBody.name;
+  try {
+    const match = EVM_ADDRESS_REGEX.test(request.body.address);
+
+    if (!match) {
+      reply.code(StatusCodes.BAD_REQUEST).send({
+        error: ReasonPhrases.BAD_REQUEST,
+        statusCode: StatusCodes.BAD_REQUEST,
+        message: "Invalid address!",
+      });
+    }
+  } catch (e: unknown) {
+    request.log.error(e, `${functionName} error in main`);
+    reply.code(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+    });
+  }
+
+  done();
+}
+
+export async function checkThatUserExists(
+  request: FastifyRequest<{
+    Body: CreateUserInput | CreateRecipeInput;
+  }>,
+  reply: FastifyReply<{
+    Reply: CreateRecipeResponseType | CreateUserResponseType;
+  }>
+  //done: HookHandlerDoneFunction
 ) {
   const functionName = checkWalletSignature.name;
   try {
@@ -87,5 +119,5 @@ export async function checkThatUserExists(
     });
   }
 
-  done();
+  // done();
 }

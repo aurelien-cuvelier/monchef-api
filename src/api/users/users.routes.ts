@@ -1,24 +1,18 @@
-import { FastifyInstance, FastifyRequest } from "fastify";
-import { checkWalletSignature } from "../middlewares/walletSignature";
-import { createUserHandler } from "./users.controller";
+import { FastifyInstance } from "fastify";
+import { $authHeadersRef, requestWithAuthHeaders } from "../auth.schemas";
+import { parseAddress } from "../middlewares/customParsing";
 import {
-  $ref,
-  CreateUserInput,
-  CreateUserResponseType,
-  createUserSchema,
-} from "./users.schema";
-
-const usersRouteAuthHeaders = {
-  headers: $ref("headerWalletSignatureSchema"),
-};
+  checkWalletSignature,
+  validateAddressInBody,
+} from "../middlewares/walletSignature";
+import { createUserHandler } from "./users.controller";
+import { $ref, CreateUserInput, CreateUserResponseType } from "./users.schema";
 
 export default async function usersRoutes(
   server: FastifyInstance
 ): Promise<void> {
   server.post<{
-    Headers: {
-      "x-wallet-signature": string;
-    };
+    Headers: requestWithAuthHeaders;
     Body: CreateUserInput;
     Reply: CreateUserResponseType;
   }>(
@@ -26,18 +20,9 @@ export default async function usersRoutes(
     {
       schema: {
         body: $ref("createUserSchema"),
-        ...usersRouteAuthHeaders,
+        headers: $authHeadersRef("headerWalletSignatureSchema"),
       },
-      preHandler: [
-        checkWalletSignature,
-        (request: FastifyRequest<{ Body: CreateUserInput }>, _, done) => {
-          /**
-           * @TODO gotta do this better
-           */
-          request.body = createUserSchema.parse(request.body);
-          done();
-        },
-      ],
+      preHandler: [validateAddressInBody, checkWalletSignature, parseAddress],
     },
 
     createUserHandler

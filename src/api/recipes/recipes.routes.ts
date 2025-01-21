@@ -1,27 +1,23 @@
-import { FastifyInstance, FastifyRequest } from "fastify";
+import { FastifyInstance } from "fastify";
+import { $authHeadersRef, requestWithAuthHeaders } from "../auth.schemas";
+import { parseAddress } from "../middlewares/customParsing";
 import {
   checkThatUserExists,
   checkWalletSignature,
+  validateAddressInBody,
 } from "../middlewares/walletSignature";
 import { createRecipeHandler } from "./recipes.controller";
 import {
   $ref,
   CreateRecipeInput,
   CreateRecipeResponseType,
-  createRecipeSchema,
 } from "./recipes.schema";
-
-const recipeRouteAuthHeaders = {
-  headers: $ref("headerWalletSignatureSchema"),
-};
 
 export default async function recipesRoutes(
   server: FastifyInstance
 ): Promise<void> {
   server.post<{
-    Headers: {
-      "x-wallet-signature": string;
-    };
+    Headers: requestWithAuthHeaders;
     Body: CreateRecipeInput;
     Reply: CreateRecipeResponseType;
   }>(
@@ -29,18 +25,13 @@ export default async function recipesRoutes(
     {
       schema: {
         body: $ref("createRecipeSchema"),
-        ...recipeRouteAuthHeaders,
+        headers: $authHeadersRef("headerWalletSignatureSchema"),
       },
       preHandler: [
+        validateAddressInBody,
         checkThatUserExists,
         checkWalletSignature,
-        (request: FastifyRequest<{ Body: CreateRecipeInput }>, _, done) => {
-          /**
-           * @TODO gotta do this better
-           */
-          request.body = createRecipeSchema.parse(request.body);
-          done();
-        },
+        parseAddress,
       ],
     },
     createRecipeHandler

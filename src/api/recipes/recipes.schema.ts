@@ -1,11 +1,8 @@
 import { Difficulty, Meal_type, Recipe, Tags, Units } from "@prisma/client";
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
-import {
-  ApiReturnDataInterface,
-  headerWalletSignatureSchema,
-  zodAddress,
-} from "../app";
+import { EVM_ADDRESS_REGEX } from "../../shared";
+import { ApiReturnDataInterface } from "../app";
 
 export type CreateRecipeResponseType = ApiReturnDataInterface<
   { id: Recipe["id"] } & { ok: true }
@@ -59,13 +56,17 @@ const recipeCore = {
 export const createRecipeSchema = z
   .object({
     ...recipeCore,
-    ...zodAddress,
+    address: z.string().refine((addr) => EVM_ADDRESS_REGEX.test(addr)),
   })
   .omit({ overall_rating: true });
 
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
 
-export const { schemas: recipeSchemas, $ref } = buildJsonSchemas({
-  createRecipeSchema,
-  headerWalletSignatureSchema,
-});
+export const { schemas: recipeSchemas, $ref } = buildJsonSchemas(
+  {
+    createRecipeSchema,
+  },
+  {
+    $id: "recipeSchemas",
+  }
+);
