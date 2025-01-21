@@ -5,8 +5,13 @@ import {
   checkWalletSignature,
   validateAddressInBody,
 } from "../middlewares/walletSignature";
-import { createUserHandler } from "./users.controller";
-import { $ref, CreateUserInput, CreateUserResponseType } from "./users.schema";
+import { createUserHandler, getUsersHandler } from "./users.controller";
+import {
+  $ref,
+  CreateUserInput,
+  CreateUserResponseType,
+  GetUsersResponseType,
+} from "./users.schema";
 
 export default async function usersRoutes(
   server: FastifyInstance
@@ -27,4 +32,6 @@ export default async function usersRoutes(
 
     createUserHandler
   );
+
+  server.get<{ Reply: GetUsersResponseType }>("/", getUsersHandler);
 }
