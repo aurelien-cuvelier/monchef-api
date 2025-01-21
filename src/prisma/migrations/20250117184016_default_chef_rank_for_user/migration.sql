@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "users" ALTER COLUMN "chef_rank" SET DEFAULT 'APPRENTICE_CHEF';

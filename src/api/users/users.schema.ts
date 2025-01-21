@@ -4,9 +4,12 @@ import z from "zod";
 import { EVM_ADDRESS_REGEX } from "../../shared";
 import { ApiReturnDataInterface } from "../app";
 
-export type CreateUserResponseType = ApiReturnDataInterface<
-  { id: User["id"] } & { ok: true }
->;
+export type CreateUserSuccessfullResponseType = { id: User["id"] } & {
+  ok: true;
+};
+
+export type CreateUserResponseType =
+  ApiReturnDataInterface<CreateUserSuccessfullResponseType>;
 
 export type getUserResponseType = ApiReturnDataInterface<
   Omit<User, "created_at" | "updated_at">

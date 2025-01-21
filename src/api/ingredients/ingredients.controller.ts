@@ -16,6 +16,7 @@ export async function getIngredientsHandler(
         name: true,
         description: true,
         thumbnail: true,
+        id: true,
       },
     });
 

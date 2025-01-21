@@ -4,9 +4,12 @@ import { z } from "zod";
 import { EVM_ADDRESS_REGEX } from "../../shared";
 import { ApiReturnDataInterface } from "../app";
 
-export type CreateRecipeResponseType = ApiReturnDataInterface<
-  { id: Recipe["id"] } & { ok: true }
->;
+export type CreateRecipeSuccessfullResponseType = { id: Recipe["id"] } & {
+  ok: true;
+};
+
+export type CreateRecipeResponseType =
+  ApiReturnDataInterface<CreateRecipeSuccessfullResponseType>;
 
 const recipeItemCore = {
   ingedient_id: z.number().int(),
@@ -36,21 +39,23 @@ const recipeCore = {
     Meal_type.MAIN_DISH,
     Meal_type.SIDE_DISH,
   ]),
-  tags: z.enum([
-    Tags.VEGAN,
-    Tags.VEGETARIAN,
-    Tags.GLUTEN_FREE,
-    Tags.DAIRY_FREE,
-    Tags.LOW_CARB,
-    Tags.PALEO,
-    Tags.KOSHER,
-    Tags.HALAL,
-  ]),
+  tags: z.array(
+    z.enum([
+      Tags.VEGAN,
+      Tags.VEGETARIAN,
+      Tags.GLUTEN_FREE,
+      Tags.DAIRY_FREE,
+      Tags.LOW_CARB,
+      Tags.PALEO,
+      Tags.KOSHER,
+      Tags.HALAL,
+    ])
+  ),
   overall_rating: z.number(), // 1, 1.5, 2, 2.5, ..., 5
 
   created_by: z.number().int(),
 
-  items: z.array(z.object(recipeItemCore)),
+  items: z.array(z.object(recipeItemCore).omit({ recipe_id: true })),
 };
 
 export const createRecipeSchema = z
@@ -58,7 +63,7 @@ export const createRecipeSchema = z
     ...recipeCore,
     address: z.string().refine((addr) => EVM_ADDRESS_REGEX.test(addr)),
   })
-  .omit({ overall_rating: true });
+  .omit({ overall_rating: true }).strict();
 
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
 

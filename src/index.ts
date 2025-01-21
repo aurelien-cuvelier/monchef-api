@@ -25,6 +25,6 @@ if (START_MAIN) {
 }
 
 async function main() {
-  //await initIngredients();
-  //await initCountries();
+  // await initIngredients();
+  // await initCountries();
 }

@@ -109,7 +109,7 @@ model Recipe {
   diffulty       Difficulty
   recipe         String        // Cooking instructions
   meal_role      Meal_type
-  tags           Tags
+  tags           Tags[]
   overall_rating Decimal        // 1, 1.5, 2, 2.5, ..., 5
 
   created_at     DateTime      @default(now())

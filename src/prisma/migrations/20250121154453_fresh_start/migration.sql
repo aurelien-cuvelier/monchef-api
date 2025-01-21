@@ -8,7 +8,7 @@ CREATE TYPE "Meal_type" AS ENUM ('MAIN_DISH', 'SIDE_DISH', 'DESSERT');
 CREATE TYPE "Tags" AS ENUM ('VEGAN', 'VEGETARIAN', 'GLUTEN_FREE', 'DAIRY_FREE', 'LOW_CARB', 'PALEO', 'KOSHER', 'HALAL');
 
 -- CreateEnum
-CREATE TYPE "Difficulty" AS ENUM ('EASY', 'MEADIUM', 'HARD');
+CREATE TYPE "Difficulty" AS ENUM ('EASY', 'MEDIUM', 'HARD');
 
 -- CreateEnum
 CREATE TYPE "Units" AS ENUM ('GRAM', 'KILOGRAM', 'MILILITER', 'LITER', 'TABLESPOON', 'TEASPOON', 'PIECE');
@@ -20,10 +20,10 @@ CREATE TABLE "users" (
     "address" TEXT NOT NULL,
     "avatar" TEXT,
     "bio" TEXT,
-    "country" INTEGER NOT NULL,
+    "country" TEXT NOT NULL,
     "twitter" TEXT,
     "discord" TEXT,
-    "chef_rank" "Chef_ranks" NOT NULL,
+    "chef_rank" "Chef_ranks" NOT NULL DEFAULT 'APPRENTICE_CHEF',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -49,7 +49,7 @@ CREATE TABLE "recipes" (
     "diffulty" "Difficulty" NOT NULL,
     "recipe" TEXT NOT NULL,
     "meal_role" "Meal_type" NOT NULL,
-    "tags" "Tags" NOT NULL,
+    "tags" "Tags"[],
     "overall_rating" DECIMAL(65,30) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
@@ -95,7 +95,7 @@ CREATE TABLE "countries" (
     "name" TEXT NOT NULL,
     "a2" TEXT NOT NULL,
     "a3" TEXT NOT NULL,
-    "flag" TEXT NOT NULL,
+    "flag" TEXT,
 
     CONSTRAINT "countries_pkey" PRIMARY KEY ("id")
 );
@@ -118,8 +118,20 @@ CREATE UNIQUE INDEX "recipe_items_id_key" ON "recipe_items"("id");
 -- CreateIndex
 CREATE UNIQUE INDEX "reviews_id_key" ON "reviews"("id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "ingredients_name_key" ON "ingredients"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "countries_name_key" ON "countries"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "countries_a2_key" ON "countries"("a2");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "countries_a3_key" ON "countries"("a3");
+
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_country_fkey" FOREIGN KEY ("country") REFERENCES "countries"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_country_fkey" FOREIGN KEY ("country") REFERENCES "countries"("a3") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "follows" ADD CONSTRAINT "follows_followerId_fkey" FOREIGN KEY ("followerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -129,6 +141,9 @@ ALTER TABLE "follows" ADD CONSTRAINT "follows_followingId_fkey" FOREIGN KEY ("fo
 
 -- AddForeignKey
 ALTER TABLE "recipes" ADD CONSTRAINT "recipes_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "recipes" ADD CONSTRAINT "recipes_country_fkey" FOREIGN KEY ("country") REFERENCES "countries"("a3") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "recipe_items" ADD CONSTRAINT "recipe_items_recipe_id_fkey" FOREIGN KEY ("recipe_id") REFERENCES "recipes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

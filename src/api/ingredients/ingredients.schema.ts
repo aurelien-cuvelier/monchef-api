@@ -1,6 +1,10 @@
 import { Ingredient } from "@prisma/client";
 import { ApiReturnDataInterface } from "../app";
 
-export type getIngredientsResponseType = ApiReturnDataInterface<
-  Pick<Ingredient, "name" | "description" | "thumbnail">[]
->;
+export type getIngredientsSuccessfullResponseType = Pick<
+  Ingredient,
+  "name" | "description" | "thumbnail" | "id"
+>[];
+
+export type getIngredientsResponseType =
+  ApiReturnDataInterface<getIngredientsSuccessfullResponseType>;
