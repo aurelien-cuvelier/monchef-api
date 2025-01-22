@@ -51,10 +51,6 @@ export type CreateUserSuccessfullResponseType = { id: User["id"] } & {
 export type CreateUserResponseType =
   ApiReturnDataInterface<CreateUserSuccessfullResponseType>;
 
-export type getUserResponseType = ApiReturnDataInterface<
-  Omit<User, "created_at" | "updated_at">
->;
-
 const userCore = {
   username: z.string(),
   address: z.string().refine((addr) => EVM_ADDRESS_REGEX.test(addr)),
@@ -78,9 +74,6 @@ export const createUserSchema = z
 //They should be calculated from signatures
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
-export type CreateUserInputWithAddress = CreateUserInput & {
-  address: Lowercase<string>;
-};
 
 export const { schemas: userSchemas, $ref } = buildJsonSchemas(
   {

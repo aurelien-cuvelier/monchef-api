@@ -3,6 +3,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { Web3 } from "web3";
 import { prisma } from "../../shared";
 import { CreateRecipeInput } from "../recipes/recipes.schema";
+import { CreateReviewInput } from "../reviews/reviews.types";
 import { CreateUserInput, CreateUserResponseType } from "../users/users.schema";
 const determStringify = require("fast-json-stable-stringify");
 
@@ -11,7 +12,7 @@ const provider = new Web3(); //provider without RPC because we only wanna use lo
 export async function checkWalletSignature(
   request: FastifyRequest<{
     Headers: { "x-wallet-signature": string };
-    Body: CreateUserInput | CreateRecipeInput;
+    Body: CreateUserInput | CreateRecipeInput | CreateReviewInput;
   }>,
   reply: FastifyReply<{ Reply: CreateUserResponseType }>
 ) {
@@ -46,6 +47,8 @@ export async function checkWalletSignature(
           message: "Signature matching no user!",
         });
       }
+
+      request.userId = foundUser?.id || null;
     }
 
     request.address = recoveredAddressLowerCase;

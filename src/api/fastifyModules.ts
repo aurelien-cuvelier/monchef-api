@@ -4,5 +4,6 @@
 declare module "fastify" {
   interface FastifyRequest {
     address: Lowercase<string> | null;
+    userId: number | null;
   }
 }
