@@ -4,8 +4,8 @@ import { Web3 } from "web3";
 import { getIngredientsSuccessfullResponseType } from "../src/api/ingredients/ingredients.schema";
 import { getMetadataSuccessfullResponseType } from "../src/api/metadata/metadata.schema";
 import { CreateRecipeInput } from "../src/api/recipes/recipes.schema";
-import { getRandomIngredientItems, pickRandomElementForArray } from "./utils";
 import { CreateUserInput } from "../src/api/users/users.schema";
+import { getRandomIngredientItems, pickRandomElementForArray } from "./utils";
 const determStringify = require("fast-json-stable-stringify");
 
 const PORT = 4000;
@@ -58,9 +58,8 @@ test("Get metadata", async () => {
 });
 
 test("Create a new user", async () => {
-  const payload:CreateUserInput = {
+  const payload: CreateUserInput = {
     username: testUsername,
-    address: testAccount.address,
     country_a3: "USA",
   };
 
@@ -86,13 +85,15 @@ test("Create a new user", async () => {
     .send(payload);
   expect(response.statusCode).toBe(StatusCodes.CONFLICT);
 
-  payload.address = provider.eth.accounts.create().address;
+  //It's now impossible to create a user with the wrong address since it is based
+  //on the signature
 
-  response = await app
-    .post("/users/create")
-    .set("x-wallet-signature", sig.signature)
-    .send(payload);
-  expect(response.statusCode).toBe(StatusCodes.FORBIDDEN);
+  // const wrongSig = provider.eth.accounts.create().sign(hashedPayload);
+  // response = await app
+  //   .post("/users/create")
+  //   .set("x-wallet-signature", wrongSig.signature)
+  //   .send(payload);
+  // expect(response.statusCode).toBe(StatusCodes.FORBIDDEN);
 });
 
 test("Create a new recipe", async () => {
@@ -111,7 +112,6 @@ Tempus cubilia netus efficitur habitasse faucibus cras. Porta morbi a commodo du
   const payload: CreateRecipeInput = {
     name: testRecipeName,
     duration: Math.floor(Math.random() * 120),
-    address: testAccount.address,
     tags: randomTags,
     country_a3: pickRandomElementForArray(metadata.countries).a3,
     description:
@@ -147,4 +147,12 @@ Tempus cubilia netus efficitur habitasse faucibus cras. Porta morbi a commodo du
   console.log(response.text);
   expect(response.statusCode).toBe(StatusCodes.OK);
   expect(JSON.parse(response.text)).toHaveProperty("id");
+
+  const wrongSig = provider.eth.accounts.create().sign(hashedPayload);
+  response = await app
+    .post("/recipes/create")
+    .set("x-wallet-signature", wrongSig.signature)
+    .send(payload);
+
+  expect(response.statusCode).toBe(StatusCodes.FORBIDDEN);
 });

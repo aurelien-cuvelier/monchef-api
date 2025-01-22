@@ -8,7 +8,6 @@ import {
 } from "@prisma/client";
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
-import { EVM_ADDRESS_REGEX } from "../../shared";
 import { ApiReturnDataInterface } from "../app";
 
 type getReceipesSucessFullReponseType = Prisma.RecipeGetPayload<{
@@ -54,24 +53,11 @@ type getReceipesSucessFullReponseType = Prisma.RecipeGetPayload<{
             id: true;
           };
         };
-        description:true
+        description: true;
       };
     };
   };
 }>[];
-
-// id         Int      @id @unique @default(autoincrement())
-// created_at DateTime @default(now())
-
-// rating  Float @default(0) //1-5 by 0.5 increment
-
-// reviewed_by_user_id    Int
-// //A review has a single author
-// reviewer User @relation("CreatedReviews", fields: [reviewed_by_user_id], references: [id])
-
-// reviewed_recipe_id   Int
-// //A review belongs to a single recipe
-// reviewed_recipe Recipe @relation("ReviewedRecipes", fields: [reviewed_recipe_id], references: [id])
 
 export type getRecipesResponseType =
   ApiReturnDataInterface<getReceipesSucessFullReponseType>;
@@ -133,7 +119,6 @@ const recipeCore = {
 export const createRecipeSchema = z
   .object({
     ...recipeCore,
-    address: z.string().refine((addr) => EVM_ADDRESS_REGEX.test(addr)),
   })
   .omit({ overall_rating: true })
   .strict();

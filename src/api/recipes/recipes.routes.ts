@@ -1,8 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { $authHeadersRef, requestWithAuthHeaders } from "../auth.schemas";
-import {
-  checkWalletSignature,
-} from "../middlewares/walletSignature";
+import { checkWalletSignature } from "../middlewares/walletSignature";
 import { createRecipeHandler, getRecipesHandler } from "./recipes.controller";
 import {
   $ref,
@@ -25,9 +23,7 @@ export default async function recipesRoutes(
         body: $ref("createRecipeSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
       },
-      preHandler: [
-        checkWalletSignature,
-      ],
+      preHandler: [checkWalletSignature],
     },
     createRecipeHandler
   );

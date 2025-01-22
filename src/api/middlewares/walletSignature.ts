@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
+import { FastifyReply, FastifyRequest } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { Web3 } from "web3";
 import { prisma } from "../../shared";
@@ -13,13 +13,10 @@ export async function checkWalletSignature(
     Headers: { "x-wallet-signature": string };
     Body: CreateUserInput | CreateRecipeInput;
   }>,
-  reply: FastifyReply<{ Reply: CreateUserResponseType }>,
-  done: HookHandlerDoneFunction
+  reply: FastifyReply<{ Reply: CreateUserResponseType }>
 ) {
   const functionName = checkWalletSignature.name;
   try {
-    //console.log(request.body);
-    //const address = request.body.address.toLowerCase();
     const hashedPayload = provider.utils.sha3(determStringify(request.body));
 
     if (!hashedPayload) {
@@ -30,23 +27,25 @@ export async function checkWalletSignature(
       .recover(hashedPayload, request.headers["x-wallet-signature"])
       .toLowerCase() as Lowercase<string>;
 
-    const foundUser = await prisma.user.findUnique({
-      select: {
-        id: true,
-        address: true,
-      },
-      where: {
-        address: recoveredAddressLowerCase,
-      },
-    });
-    //If no user is found with this address, then we assume
-
-    if (!foundUser) {
-      reply.code(StatusCodes.FORBIDDEN).send({
-        error: ReasonPhrases.FORBIDDEN,
-        statusCode: StatusCodes.FORBIDDEN,
-        message: "Signature matching no user!",
+    if (request.url !== "/users/create") {
+      //We skip this ONLY when creating a new user
+      const foundUser = await prisma.user.findUnique({
+        select: {
+          id: true,
+          address: true,
+        },
+        where: {
+          address: recoveredAddressLowerCase,
+        },
       });
+      //If no user is found with this address, then we assume
+      if (!foundUser) {
+        reply.code(StatusCodes.FORBIDDEN).send({
+          error: ReasonPhrases.FORBIDDEN,
+          statusCode: StatusCodes.FORBIDDEN,
+          message: "Signature matching no user!",
+        });
+      }
     }
 
     request.address = recoveredAddressLowerCase;
@@ -57,7 +56,4 @@ export async function checkWalletSignature(
       statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
     });
   }
-
-  done();
 }
-

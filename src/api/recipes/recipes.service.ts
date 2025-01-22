@@ -6,7 +6,8 @@ import { createUserInDb } from "../users/users.service";
 import { CreateRecipeInput } from "./recipes.schema";
 
 export async function createRecipeInDb(
-  input: CreateRecipeInput
+  input: CreateRecipeInput,
+  address: Lowercase<string>
 ): Promise<
   { ok: true; id: number } | { ok: false; statusCode: number; error: string }
 > {
@@ -21,7 +22,7 @@ export async function createRecipeInDb(
         id: true,
       },
       where: {
-        address: input.address,
+        address,
       },
     });
 

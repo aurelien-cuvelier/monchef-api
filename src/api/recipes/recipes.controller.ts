@@ -83,9 +83,13 @@ export async function createRecipeHandler(
   }>
 ) {
   try {
+    if (!request.address) {
+      throw new Error(`Request NOT decorated with address!`);
+    }
+
     request.body = createRecipeSchema.parse(request.body);
 
-    const res = await createRecipeInDb(request.body);
+    const res = await createRecipeInDb(request.body,request.address);
 
     const { ok } = res;
 
