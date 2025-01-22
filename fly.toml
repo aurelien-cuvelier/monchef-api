@@ -1,23 +1,16 @@
-# fly.toml app configuration file generated for monchef-api-prod on 2025-01-22T08:38:59Z
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
-app = 'monchef-api-prod'
-primary_region = 'fra'
-
-[build]
+app = "monchef-api"
+primary_region = "fra"
 
 [http_service]
-  internal_port = 4000
-  force_https = true
-  auto_stop_machines = 'stop'
-  auto_start_machines = true
-  min_machines_running = 1
-  processes = ['app']
+auto_start_machines = true
+auto_stop_machines = true
+force_https = true
+internal_port = 4_000
+min_machines_running = 1
+processes = [ "app" ]
 
 [[vm]]
-  memory = '2gb'
-  cpu_kind = 'shared'
-  cpus = 2
-  memory_mb = 2048
+cpu_kind = "shared"
+cpus = 2
+memory = "2gb"
+memory_mb = 2_048
