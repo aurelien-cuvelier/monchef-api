@@ -1,10 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { $authHeadersRef, requestWithAuthHeaders } from "../auth.schemas";
-import { parseAddress } from "../middlewares/customParsing";
 import {
-  checkThatUserExists,
   checkWalletSignature,
-  validateAddressInBody,
 } from "../middlewares/walletSignature";
 import { createRecipeHandler, getRecipesHandler } from "./recipes.controller";
 import {
@@ -29,10 +26,7 @@ export default async function recipesRoutes(
         headers: $authHeadersRef("headerWalletSignatureSchema"),
       },
       preHandler: [
-        validateAddressInBody,
-        checkThatUserExists,
         checkWalletSignature,
-        parseAddress,
       ],
     },
     createRecipeHandler

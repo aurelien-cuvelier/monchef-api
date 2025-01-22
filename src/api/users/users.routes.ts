@@ -1,10 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { $authHeadersRef, requestWithAuthHeaders } from "../auth.schemas";
-import { parseAddress } from "../middlewares/customParsing";
-import {
-  checkWalletSignature,
-  validateAddressInBody,
-} from "../middlewares/walletSignature";
+import { checkWalletSignature } from "../middlewares/walletSignature";
 import { createUserHandler, getUsersHandler } from "./users.controller";
 import {
   $ref,
@@ -16,6 +12,7 @@ import {
 export default async function usersRoutes(
   server: FastifyInstance
 ): Promise<void> {
+  server.decorateRequest("address", null);
   server.post<{
     Headers: requestWithAuthHeaders;
     Body: CreateUserInput;
@@ -27,7 +24,7 @@ export default async function usersRoutes(
         body: $ref("createUserSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
       },
-      preHandler: [validateAddressInBody, checkWalletSignature, parseAddress],
+      preHandler: [checkWalletSignature],
     },
 
     createUserHandler

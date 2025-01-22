@@ -11,6 +11,7 @@ import recipesRoutes from "./recipes/recipes.routes";
 import { recipeSchemas } from "./recipes/recipes.schema";
 import usersRoutes from "./users/users.routes";
 import { userSchemas } from "./users/users.schema";
+import  "./fastifyModules"
 
 //For consistency purposes, EVERY PUBLIC endpoint should implement the same interface for responses
 //This one complies with fastify generated errors

@@ -4,7 +4,8 @@ import { prisma } from "../../shared";
 import { CreateUserInput } from "./users.schema";
 
 export async function createUserInDb(
-  input: CreateUserInput
+  input: CreateUserInput,
+  address: Lowercase<string>
 ): Promise<
   { ok: true; id: number } | { ok: false; statusCode: number; error: string }
 > {
@@ -18,7 +19,7 @@ export async function createUserInDb(
       prisma.user.findFirst({
         select: { id: true },
         where: {
-          address: input.address,
+          address,
         },
       }),
       prisma.user.findFirst({
@@ -46,7 +47,7 @@ export async function createUserInDb(
     }
 
     const created = await prisma.user.create({
-      data: input,
+      data: { ...input, address },
       select: {
         id: true,
       },

@@ -69,11 +69,18 @@ const userCore = {
   discord: z.string().optional(),
 };
 
-export const createUserSchema = z.object({
-  ...userCore,
-});
+export const createUserSchema = z
+  .object({
+    ...userCore,
+  })
+  .omit({ address: true });
+//From now not including address in payloads as it creates friction for parsing
+//They should be calculated from signatures
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
+export type CreateUserInputWithAddress = CreateUserInput & {
+  address: Lowercase<string>;
+};
 
 export const { schemas: userSchemas, $ref } = buildJsonSchemas(
   {

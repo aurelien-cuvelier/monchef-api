@@ -27,18 +27,18 @@ export async function getUsersHandler(
         discord: true,
         chef_rank: true,
         created_at: true,
-        _count:{
-          select:{
-            recipes:true,
-            reviews:true
-          }
+        _count: {
+          select: {
+            recipes: true,
+            reviews: true,
+          },
         },
-        recipes:{
-          select:{
-            id:true,
-            name:true,
-            overall_rating:true,
-          }
+        recipes: {
+          select: {
+            id: true,
+            name: true,
+            overall_rating: true,
+          },
         },
         reviews: {
           select: {
@@ -72,10 +72,12 @@ export async function createUserHandler(
   }>
 ) {
   try {
+    if (!request.address) {
+      throw new Error(`Request NOT decorated with address!`);
+    }
+
     request.body = createUserSchema.parse(request.body);
-
-    const res = await createUserInDb(request.body);
-
+    const res = await createUserInDb(request.body, request.address);
     const { ok } = res;
 
     if (!ok) {
