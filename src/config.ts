@@ -2,7 +2,7 @@ require("dotenv").config();
 
 import { globalLogger } from "./logger";
 
-export const IS_PRODUCTION = process.env.NODE_ENV !== "production";
+export const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 /**
  * This file is the only file where process.env shoud be used. Each env variable should have a getter function here

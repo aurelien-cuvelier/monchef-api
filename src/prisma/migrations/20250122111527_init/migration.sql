@@ -20,7 +20,7 @@ CREATE TABLE "users" (
     "address" TEXT NOT NULL,
     "avatar" TEXT,
     "bio" TEXT,
-    "country_name" TEXT NOT NULL,
+    "country_a3" TEXT NOT NULL,
     "twitter" TEXT,
     "discord" TEXT,
     "chef_rank" "Chef_ranks" NOT NULL DEFAULT 'APPRENTICE_CHEF',
@@ -43,14 +43,14 @@ CREATE TABLE "recipes" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "country" TEXT NOT NULL,
+    "country_a3" TEXT NOT NULL,
     "images" TEXT[],
     "duration" INTEGER NOT NULL,
     "diffulty" "Difficulty" NOT NULL,
     "instructions" TEXT NOT NULL,
     "meal_role" "Meal_role" NOT NULL,
     "tags" "Tags"[],
-    "overall_rating" DECIMAL(65,30) NOT NULL,
+    "overall_rating" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "created_by" INTEGER NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE "recipe_items" (
     "id" SERIAL NOT NULL,
     "ingedient_id" INTEGER NOT NULL,
     "unit" "Units" NOT NULL,
-    "quantity" DECIMAL(65,30) NOT NULL,
+    "quantity" DOUBLE PRECISION NOT NULL,
     "recipe_id" INTEGER NOT NULL,
 
     CONSTRAINT "recipe_items_pkey" PRIMARY KEY ("id")
@@ -73,6 +73,8 @@ CREATE TABLE "recipe_items" (
 CREATE TABLE "reviews" (
     "id" SERIAL NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "rating" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "description" TEXT,
     "reviewed_by_user_id" INTEGER NOT NULL,
     "reviewed_recipe_id" INTEGER NOT NULL,
 
@@ -131,7 +133,7 @@ CREATE UNIQUE INDEX "countries_a2_key" ON "countries"("a2");
 CREATE UNIQUE INDEX "countries_a3_key" ON "countries"("a3");
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_country_name_fkey" FOREIGN KEY ("country_name") REFERENCES "countries"("a3") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_country_a3_fkey" FOREIGN KEY ("country_a3") REFERENCES "countries"("a3") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "follows" ADD CONSTRAINT "follows_followerId_fkey" FOREIGN KEY ("followerId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -143,7 +145,7 @@ ALTER TABLE "follows" ADD CONSTRAINT "follows_followingId_fkey" FOREIGN KEY ("fo
 ALTER TABLE "recipes" ADD CONSTRAINT "recipes_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "recipes" ADD CONSTRAINT "recipes_country_fkey" FOREIGN KEY ("country") REFERENCES "countries"("a3") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "recipes" ADD CONSTRAINT "recipes_country_a3_fkey" FOREIGN KEY ("country_a3") REFERENCES "countries"("a3") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "recipe_items" ADD CONSTRAINT "recipe_items_recipe_id_fkey" FOREIGN KEY ("recipe_id") REFERENCES "recipes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

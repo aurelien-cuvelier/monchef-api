@@ -4,6 +4,8 @@ import { IS_PRODUCTION } from "./config";
 import "./logger";
 import { globalLogger } from "./logger";
 import { prisma } from "./shared";
+import { initCountries } from "./utils/initCountries";
+import { initIngredients } from "./utils/initIngredients";
 
 const START_APP = true;
 const START_MAIN = true;
