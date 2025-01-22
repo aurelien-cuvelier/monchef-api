@@ -20,7 +20,8 @@ export const IS_PRODUCTION = process.env.NODE_ENV === "production";
 })();
 
 export function getDatabaseUrl(): string {
-  const dbEnvKey = IS_PRODUCTION ? "DATABASE_URL" : "DATABASE_URL_DEV";
+  //Input another key for dev if needed
+  const dbEnvKey = IS_PRODUCTION ? "DATABASE_URL" : "DATABASE_URL";
   const val = IS_PRODUCTION ? process.env[dbEnvKey] : process.env[dbEnvKey];
 
   if (!val) {

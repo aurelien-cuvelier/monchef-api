@@ -8,7 +8,7 @@ import { initCountries } from "./utils/initCountries";
 import { initIngredients } from "./utils/initIngredients";
 
 const START_APP = true;
-const START_MAIN = true;
+const START_MAIN = false;
 
 globalLogger.info(
   `New backend instance starting [IS_PRODUCTION: ${IS_PRODUCTION}]`
@@ -27,6 +27,6 @@ if (START_MAIN) {
 }
 
 async function main() {
-  // await initIngredients();
-  // await initCountries();
+  await initIngredients();
+  await initCountries();
 }
