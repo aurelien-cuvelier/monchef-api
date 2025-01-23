@@ -3,7 +3,7 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { globalLogger } from "../../logger";
 import { prisma } from "../../shared";
 import { createUserInDb } from "../users/users.service";
-import { CreateRecipeInput } from "./recipes.schema";
+import { CreateRecipeInput } from "./recipes.types";
 
 export async function createRecipeInDb(
   input: CreateRecipeInput,

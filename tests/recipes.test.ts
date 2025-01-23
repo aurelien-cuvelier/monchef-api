@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { CreateRecipeInput } from "../src/api/recipes/recipes.schema";
+import { CreateRecipeInput } from "../src/api/recipes/recipes.types";
 import { provider, supertestApp } from "./shared";
 import {
   fetchIngredientsAndMedata,
@@ -60,7 +60,6 @@ Tempus cubilia netus efficitur habitasse faucibus cras. Porta morbi a commodo du
     .set("x-wallet-signature", signature)
     .send(payload);
 
-  console.log(response.text);
   expect(response.statusCode).toBe(StatusCodes.OK);
   expect(JSON.parse(response.text)).toHaveProperty("id");
 

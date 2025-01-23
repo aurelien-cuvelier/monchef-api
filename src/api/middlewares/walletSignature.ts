@@ -2,9 +2,9 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { Web3 } from "web3";
 import { prisma } from "../../shared";
-import { CreateRecipeInput } from "../recipes/recipes.schema";
+import { CreateRecipeInput } from "../recipes/recipes.types";
 import { CreateReviewInput } from "../reviews/reviews.types";
-import { CreateUserInput, CreateUserResponseType } from "../users/users.schema";
+import { CreateUserInput, CreateUserResponseType } from "../users/users.types";
 const determStringify = require("fast-json-stable-stringify");
 
 const provider = new Web3(); //provider without RPC because we only wanna use local utils

@@ -1,73 +1,6 @@
-import {
-  Difficulty,
-  Meal_role,
-  Prisma,
-  Recipe,
-  Tags,
-  Units,
-} from "@prisma/client";
+import { Difficulty, Meal_role, Tags, Units } from "@prisma/client";
 import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
-import { ApiReturnDataInterface } from "../app";
-
-type getReceipesSucessFullReponseType = Prisma.RecipeGetPayload<{
-  include: {
-    items: {
-      select: {
-        unit: true;
-        quantity: true;
-        ingredient: {
-          select: {
-            name: true;
-            id: true;
-          };
-        };
-      };
-    };
-    recipe_country: {
-      select: {
-        name: true;
-        a3: true;
-      };
-    };
-    recipe_creator: {
-      select: {
-        username: true;
-        chef_rank: true;
-        country: {
-          select: {
-            name: true;
-            a3: true;
-          };
-        };
-      };
-    };
-    reviews: {
-      select: {
-        id: true;
-        created_at: true;
-        rating: true;
-        reviewer: {
-          select: {
-            username: true;
-            id: true;
-          };
-        };
-        description: true;
-      };
-    };
-  };
-}>[];
-
-export type getRecipesResponseType =
-  ApiReturnDataInterface<getReceipesSucessFullReponseType>;
-
-export type CreateRecipeSuccessfullResponseType = { id: Recipe["id"] } & {
-  ok: true;
-};
-
-export type CreateRecipeResponseType =
-  ApiReturnDataInterface<CreateRecipeSuccessfullResponseType>;
 
 const recipeItemCore = {
   ingedient_id: z.number().int(),
@@ -122,8 +55,6 @@ export const createRecipeSchema = z
   })
   .omit({ overall_rating: true })
   .strict();
-
-export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
 
 export const { schemas: recipeSchemas, $ref } = buildJsonSchemas(
   {

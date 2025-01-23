@@ -2,19 +2,21 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { prisma } from "../../shared";
 import { ApiReturnDataInterface } from "../app";
+import { createRecipeSchema } from "./recipes.schema";
+
 import {
   CreateRecipeInput,
   CreateRecipeResponseType,
-  createRecipeSchema,
-  getRecipesResponseType,
-} from "./recipes.schema";
+  GetRecipesResponseType,
+} from "./recipes.types";
+
 import { createRecipeInDb } from "./recipes.service";
 import { recipeSelect } from "./recipes.types";
 
 export async function getRecipesHandler(
   request: FastifyRequest,
   reply: FastifyReply<{
-    Reply: getRecipesResponseType;
+    Reply: GetRecipesResponseType;
   }>
 ) {
   try {

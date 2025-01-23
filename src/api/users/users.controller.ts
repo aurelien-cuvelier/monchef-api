@@ -3,11 +3,14 @@ import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { prisma } from "../../shared";
 import { ApiReturnDataInterface } from "../app";
 import {
+  createUserSchema,
+} from "./users.schema";
+
+import {
   CreateUserInput,
   CreateUserResponseType,
-  createUserSchema,
   GetUsersResponseType,
-} from "./users.schema";
+} from "./users.types";
 import { createUserInDb } from "./users.service";
 
 export async function getUsersHandler(

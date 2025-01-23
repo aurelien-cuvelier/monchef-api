@@ -1,7 +1,7 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { globalLogger } from "../../logger";
 import { prisma } from "../../shared";
-import { CreateUserInput } from "./users.schema";
+import { CreateUserInput } from "./users.types";
 
 export async function createUserInDb(
   input: CreateUserInput,

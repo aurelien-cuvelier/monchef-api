@@ -3,11 +3,11 @@ import { assert } from "console";
 import { Web3Account } from "web3";
 import { getIngredientsSuccessfullResponseType } from "../src/api/ingredients/ingredients.schema";
 import { getMetadataSuccessfullResponseType } from "../src/api/metadata/metadata.schema";
-import { CreateRecipeInput } from "../src/api/recipes/recipes.schema";
+import { CreateRecipeInput } from "../src/api/recipes/recipes.types";
 import {
   CreateUserInput,
   CreateUserResponseType,
-} from "../src/api/users/users.schema";
+} from "../src/api/users/users.types";
 import { APP_URL, provider } from "./shared";
 const determStringify = require("fast-json-stable-stringify");
 

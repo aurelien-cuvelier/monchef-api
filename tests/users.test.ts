@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { CreateUserInput } from "../src/api/users/users.schema";
+import { CreateUserInput } from "../src/api/users/users.types";
 import { supertestApp } from "./shared";
 import { getNewTestData, signPayload } from "./utils";
 
@@ -20,8 +20,6 @@ test("Create a new user", async () => {
     .post("/users/create")
     .set("x-wallet-signature", signature)
     .send(payload);
-
-  console.log(response.text);
 
   expect(response.statusCode).toBe(StatusCodes.OK);
   expect(JSON.parse(response.text)).toHaveProperty("id");

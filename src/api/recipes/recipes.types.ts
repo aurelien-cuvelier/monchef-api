@@ -1,5 +1,7 @@
 import { Prisma, Recipe } from "@prisma/client";
+import z from "zod";
 import { ApiReturnDataInterface } from "../app";
+import { createRecipeSchema } from "./recipes.schema";
 
 export const recipeSelect = {
   items: {
@@ -61,3 +63,5 @@ export type CreateRecipeSuccessfullResponseType = { id: Recipe["id"] } & {
 
 export type CreateRecipeResponseType =
   ApiReturnDataInterface<CreateRecipeSuccessfullResponseType>;
+
+export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;

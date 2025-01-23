@@ -2,12 +2,13 @@ import { FastifyInstance } from "fastify";
 import { $authHeadersRef, requestWithAuthHeaders } from "../auth.schemas";
 import { checkWalletSignature } from "../middlewares/walletSignature";
 import { createRecipeHandler, getRecipesHandler } from "./recipes.controller";
+import { $ref } from "./recipes.schema";
+
 import {
-  $ref,
   CreateRecipeInput,
   CreateRecipeResponseType,
-  getRecipesResponseType,
-} from "./recipes.schema";
+  GetRecipesResponseType,
+} from "./recipes.types";
 
 export default async function recipesRoutes(
   server: FastifyInstance
@@ -28,5 +29,5 @@ export default async function recipesRoutes(
     createRecipeHandler
   );
 
-  server.get<{ Reply: getRecipesResponseType }>("/", getRecipesHandler);
+  server.get<{ Reply: GetRecipesResponseType }>("/", getRecipesHandler);
 }
