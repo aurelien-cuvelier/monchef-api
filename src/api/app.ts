@@ -10,6 +10,8 @@ import ingredientsRoutes from "./ingredients/ingredients.routes";
 import metadataRoutes from "./metadata/metadata.routes";
 import recipesRoutes from "./recipes/recipes.routes";
 import { recipeSchemas } from "./recipes/recipes.schema";
+import reviewsRoutes from "./reviews/reviews.routes";
+import { reviewSchemas } from "./reviews/reviews.schema";
 import usersRoutes from "./users/users.routes";
 import { userSchemas } from "./users/users.schema";
 
@@ -34,6 +36,8 @@ const server = fastify({
 for (const schema of [
   ...userSchemas,
   ...recipeSchemas,
+  ...reviewSchemas,
+
   ...authHeadersSchemas,
 ]) {
   server.addSchema(schema);
@@ -44,6 +48,7 @@ server.register(ingredientsRoutes, { prefix: "ingredients" });
 server.register(usersRoutes, { prefix: "users" });
 server.register(recipesRoutes, { prefix: "recipes" });
 server.register(metadataRoutes, { prefix: "metadata" });
+server.register(reviewsRoutes, { prefix: "reviews" });
 
 server.get("/healthcheck", async (_, reply) => {
   reply.code(StatusCodes.OK).send({

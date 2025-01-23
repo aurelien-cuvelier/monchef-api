@@ -1,15 +1,16 @@
 import { FastifyInstance } from "fastify";
 import { $authHeadersRef, requestWithAuthHeaders } from "../auth.schemas";
+import { checkReviewRating } from "../middlewares/checkReviewRating";
 import { checkWalletSignature } from "../middlewares/walletSignature";
 import { createReviewHandler, getReviewsHandler } from "./reviews.controller";
-import {CreateReviewInput} from "./reviews.types"
-import { $ref,  } from "./reviews.schema";
+import { $ref } from "./reviews.schema";
 import {
+  CreateReviewInput,
   CreateReviewResponseType,
   GetReviewsResponseType,
 } from "./reviews.types";
 
-export default async function usersRoutes(
+export default async function reviewsRoutes(
   server: FastifyInstance
 ): Promise<void> {
   server.decorateRequest("address", null);
@@ -24,7 +25,7 @@ export default async function usersRoutes(
         body: $ref("createReviewSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
       },
-      preHandler: [checkWalletSignature],
+      preHandler: [checkWalletSignature, checkReviewRating],
     },
 
     createReviewHandler

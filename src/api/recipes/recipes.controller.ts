@@ -21,7 +21,7 @@ export async function getRecipesHandler(
 ) {
   try {
     const recipes = await prisma.recipe.findMany({
-      include: recipeSelect,
+      select: recipeSelect,
     });
 
     return reply.code(StatusCodes.OK).send(recipes);

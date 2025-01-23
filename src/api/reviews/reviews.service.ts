@@ -15,10 +15,17 @@ export async function createReviewInDb(
       select: {
         id: true,
         reviews: {
+          select: {
+            id: true,
+            reviewed_by_user_id: true,
+          },
           where: {
             reviewed_by_user_id: userId,
           },
         },
+      },
+      where: {
+        id: input.reviewedRecipeId,
       },
     });
 

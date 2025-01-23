@@ -4,6 +4,7 @@ import { ApiReturnDataInterface } from "../app";
 import { createRecipeSchema } from "./recipes.schema";
 
 export const recipeSelect = {
+  id: true,
   items: {
     select: {
       unit: true,

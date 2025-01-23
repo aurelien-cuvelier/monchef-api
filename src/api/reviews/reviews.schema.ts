@@ -2,6 +2,12 @@ import { buildJsonSchemas } from "fastify-zod";
 import z from "zod";
 
 const reviewCore = {
+  /**
+   * @DEV
+   * fastify-zod will NOT do any non-structural checks (eg. refine) so some data
+   * might still pass even though it should not. These should be checked inside
+   * of a middleware, see checkReviewRating in ../middlewares/checkReviewRating
+   */
   rating: z
     .number()
     .min(1, { message: "Value must be at least 1" })

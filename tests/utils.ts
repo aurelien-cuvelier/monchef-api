@@ -1,9 +1,11 @@
 import axios from "axios";
-import { assert } from "console";
 import { Web3Account } from "web3";
 import { getIngredientsSuccessfullResponseType } from "../src/api/ingredients/ingredients.schema";
 import { getMetadataSuccessfullResponseType } from "../src/api/metadata/metadata.schema";
-import { CreateRecipeInput } from "../src/api/recipes/recipes.types";
+import {
+  CreateRecipeInput,
+  GetRecipesResponseType,
+} from "../src/api/recipes/recipes.types";
 import {
   CreateUserInput,
   CreateUserResponseType,
@@ -52,16 +54,15 @@ export async function getNewTestData<T extends boolean>(
           }
         );
 
-        //Axios does not infer?
-        const inferedRes = res as any;
-
-        assert(inferedRes.data?.id);
+        if ("error" in res) {
+          throw new Error("Call failed");
+        }
 
         resolve({
           testAccount,
           testUsername,
           testRecipeName,
-          userId: inferedRes.data.id,
+          userId: res.id,
         });
       })
     : { testAccount, testUsername, testRecipeName };
@@ -82,6 +83,12 @@ export async function fetchIngredientsAndMedata(): Promise<{
   );
 
   return { ingredients: resIngredients.data, metadata: resMetadata.data };
+}
+
+export async function fetchRecipes(): Promise<GetRecipesResponseType> {
+  const res = await axios.get<GetRecipesResponseType>(APP_URL + "/recipes");
+
+  return res.data;
 }
 
 export function pickRandomElementForArray<T>(arr: Array<T>): T {
