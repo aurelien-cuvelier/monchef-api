@@ -10,9 +10,6 @@ import { initIngredients } from "./utils/initIngredients";
 const START_APP = true;
 const START_MAIN = false;
 
-//won't build
-const hello: string = 55;
-
 globalLogger.info(
   `New backend instance starting [IS_PRODUCTION: ${IS_PRODUCTION}]`
 );
