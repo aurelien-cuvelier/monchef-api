@@ -47,6 +47,7 @@ export async function createReviewInDb(
 
     const created = await prisma.review.create({
       data: {
+        title:input.title,
         rating: input.rating,
         description: input.description,
         reviewed_recipe_id: input.reviewedRecipeId,
