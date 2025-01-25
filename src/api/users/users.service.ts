@@ -1,7 +1,7 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { globalLogger } from "../../logger";
 import { prisma } from "../../shared";
-import { CreateUserInput } from "./users.types";
+import { CreateUserInput, EditUserInput } from "./users.types";
 
 export async function createUserInDb(
   input: CreateUserInput,
@@ -54,6 +54,55 @@ export async function createUserInDb(
     });
 
     return { ok: true, id: created.id };
+  } catch (e: unknown) {
+    globalLogger.error(e, `${functionName} error in main`);
+    return {
+      ok: false,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+      error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+    };
+  }
+}
+
+export async function editUserInDb(
+  input: EditUserInput,
+  userId: number
+): Promise<
+  { ok: true; id: number } | { ok: false; statusCode: number; error: string }
+> {
+  const functionName = createUserInDb.name;
+  try {
+    if (input.username) {
+      const usernameTaken = await prisma.user.findFirst({
+        select: {
+          id: true,
+          address: true,
+        },
+        where: {
+          username: input.username,
+        },
+      });
+
+      if (usernameTaken && usernameTaken?.id !== userId) {
+        return {
+          ok: false,
+          statusCode: StatusCodes.CONFLICT,
+          error: `Username already in use`,
+        };
+      }
+    }
+
+    const updated = await prisma.user.update({
+      data: { ...input },
+      select: {
+        id: true,
+      },
+      where: {
+        id: userId,
+      },
+    });
+
+    return { ok: true, id: updated.id };
   } catch (e: unknown) {
     globalLogger.error(e, `${functionName} error in main`);
     return {

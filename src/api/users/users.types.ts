@@ -4,6 +4,7 @@ import { ApiReturnDataInterface } from "../app";
 import { createUserSchema } from "./users.schema";
 
 export const userSelect = {
+  id: true,
   username: true,
   avatar: true,
   bio: true,
@@ -53,3 +54,12 @@ export type CreateUserResponseType =
   ApiReturnDataInterface<CreateUserSuccessfullResponseType>;
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
+
+export type EditUserSuccessfullResponseType = { id: User["id"] } & {
+  ok: true;
+};
+
+export type EditUserResponseType =
+  ApiReturnDataInterface<EditUserSuccessfullResponseType>;
+
+export type EditUserInput = z.infer<typeof createUserSchema>;

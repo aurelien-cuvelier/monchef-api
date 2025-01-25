@@ -23,6 +23,21 @@ export const LOGGER_CONFIG: LoggerOptions = {
       return { level: label.toUpperCase() };
     },
   },
+  serializers: {
+    req(req) {
+      return {
+        method: req.method,
+        url: req.url,
+        params: req.params,
+        ["x-wallet-signature"]: req.headers["x-wallet-signature"],
+      };
+    },
+    res(reply) {
+      return {
+        statusCode: reply.statusCode,
+      };
+    },
+  },
 };
 
 export const EVM_ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;

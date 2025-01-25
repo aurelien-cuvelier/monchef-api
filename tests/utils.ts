@@ -9,6 +9,7 @@ import {
 import {
   CreateUserInput,
   CreateUserResponseType,
+  GetUserSuccessfullReponseType,
 } from "../src/api/users/users.types";
 import { APP_URL, provider } from "./shared";
 const determStringify = require("fast-json-stable-stringify");
@@ -44,7 +45,7 @@ export async function getNewTestData<T extends boolean>(
   const signature = signPayload(testAccount, payload);
   const returnData = createAccount
     ? await new Promise<TestData>(async (resolve) => {
-        const res = await axios.post<CreateUserInput, CreateUserResponseType>(
+        const res = await axios.post<CreateUserResponseType>(
           APP_URL + "/users/create",
           payload,
           {
@@ -54,15 +55,15 @@ export async function getNewTestData<T extends boolean>(
           }
         );
 
-        if ("error" in res) {
-          throw new Error("Call failed");
+        if ("error" in res.data) {
+          throw new Error(`Calle failed: ${res.statusText}`);
         }
 
         resolve({
           testAccount,
           testUsername,
           testRecipeName,
-          userId: res.id,
+          userId: res.data.id,
         });
       })
     : { testAccount, testUsername, testRecipeName };
@@ -83,6 +84,18 @@ export async function fetchIngredientsAndMedata(): Promise<{
   );
 
   return { ingredients: resIngredients.data, metadata: resMetadata.data };
+}
+
+export async function fetchUsers(): Promise<GetUserSuccessfullReponseType> {
+  const res = await axios.get<GetUserSuccessfullReponseType>(
+    APP_URL + "/users"
+  );
+
+  if ("error" in res) {
+    throw new Error("Call failed " + res.status);
+  }
+
+  return res.data;
 }
 
 export async function fetchRecipes(): Promise<GetRecipesResponseType> {

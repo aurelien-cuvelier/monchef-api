@@ -1,10 +1,9 @@
 import { buildJsonSchemas } from "fastify-zod";
 import z from "zod";
-import { EVM_ADDRESS_REGEX } from "../../shared";
 
 const userCore = {
   username: z.string(),
-  address: z.string().refine((addr) => EVM_ADDRESS_REGEX.test(addr)),
+  //address: z.string().refine((addr) => EVM_ADDRESS_REGEX.test(addr)),
   /**
    * @DEV altering methods (eg. transform) are NOT applied when fastify does its things
    * @TODO gotta find a clean way to do this AFTER checking auth or it will modify the payload
@@ -16,17 +15,24 @@ const userCore = {
   discord: z.string().optional(),
 };
 
-export const createUserSchema = z
+export const createUserSchema = z.object({
+  ...userCore,
+});
+
+//Currently data to edit is the same as for creation but partial
+export const editUserSchema = z
   .object({
     ...userCore,
   })
-  .omit({ address: true });
+  .partial();
+
 //From now not including address in payloads as it creates friction for parsing
 //They should be calculated from signatures
 
 export const { schemas: userSchemas, $ref } = buildJsonSchemas(
   {
     createUserSchema,
+    editUserSchema,
   },
   {
     $id: "userSchemas",
