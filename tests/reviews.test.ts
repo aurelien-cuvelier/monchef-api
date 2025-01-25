@@ -36,6 +36,7 @@ test("Create a new review", async () => {
   const randomRecipe = pickRandomElementForArray(recipes);
 
   const payload: CreateReviewInput = {
+    title: `TEST_REVIEW` + faker.string.sample(5),
     rating: 1.55, //Not multiple of 0.5
     reviewedRecipeId: randomRecipe.id,
     description: faker.string.sample({ min: 100, max: 1000 }),

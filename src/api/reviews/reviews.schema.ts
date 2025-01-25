@@ -8,6 +8,7 @@ const reviewCore = {
    * might still pass even though it should not. These should be checked inside
    * of a middleware, see checkReviewRating in ../middlewares/checkReviewRating
    */
+  title: z.string(),
   rating: z
     .number()
     .min(1, { message: "Value must be at least 1" })

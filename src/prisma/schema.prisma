@@ -151,6 +151,8 @@ model Review {
   id         Int      @id @unique @default(autoincrement())
   created_at DateTime @default(now())
 
+  title String
+
   rating  Float @default(0) //1-5 by 0.5 increment
 
   description String?
