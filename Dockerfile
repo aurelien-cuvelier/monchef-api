@@ -17,6 +17,6 @@ run npx prisma generate --schema src/prisma/schema.prisma
 
 #RUN npm run build
 
-EXPOSE 4000
+EXPOSE 8080
 
 CMD pnpm run prod
