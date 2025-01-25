@@ -9,6 +9,17 @@ internal_port = 8080
 min_machines_running = 1
 processes = [ "app" ]
 
+[checks]
+  [checks.app_health_check]
+    grace_period = "10s"
+    interval = "15s"
+    method = "get"
+    path = "/healthcheck"
+    port = 8080
+    timeout = "10s"
+    type = "http"
+
+
 [[vm]]
 cpu_kind = "shared"
 cpus = 2
