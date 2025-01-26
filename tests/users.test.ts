@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { StatusCodes } from "http-status-codes";
 import { CreateUserInput, EditUserInput } from "../src/api/users/users.types";
-import { supertestApp } from "./shared";
+import { jabber, supertestApp } from "./shared";
 import {
   fetchIngredientsAndMedata,
   fetchUsers,
@@ -63,12 +63,12 @@ test("Edit an existing user", async () => {
     avatar: `https://www.randomgsite.com/${faker.string.hexadecimal({
       length: 10,
     })}.png`,
-    bio: faker.string.sample({ min: 10, max: 50 }),
+    bio: jabber.createParagraph(200),
     twitter: "https://x.com/monchef_xyz",
     discord: "https://x.com/monchef_xyz",
   };
 
-  const signature = signPayload(testData.testAccount, payload);
+  let signature = signPayload(testData.testAccount, payload);
 
   let response = await supertestApp
     .post("/users/edit")
@@ -89,4 +89,36 @@ test("Edit an existing user", async () => {
     userBefore.username !== foundNewUser.username &&
       foundNewUser.username === payload.username
   ).toBe(true);
+
+  /**
+   * @LINK see userCore @src/api/users/users.schema.ts
+   */
+  payload.bio = "";
+  payload.twitter = "";
+  payload.discord = "";
+  payload.avatar = "";
+
+  signature = signPayload(testData.testAccount, payload);
+
+  response = await supertestApp
+    .post("/users/edit")
+    .send(payload)
+    .set("x-wallet-signature", signature);
+
+  expect(response.statusCode).toBe(StatusCodes.OK);
+
+  const updatedUsers = await fetchUsers();
+
+  const foundUpdatedUser = updatedUsers.find(
+    (user) => user.id === testData.userId
+  );
+
+  if (!foundUpdatedUser) {
+    throw new Error(`Could not find user`);
+  }
+
+  expect(foundUpdatedUser.bio).toStrictEqual("");
+  expect(foundUpdatedUser.twitter).toStrictEqual("");
+  expect(foundUpdatedUser.discord).toStrictEqual("");
+  expect(foundUpdatedUser.avatar).toStrictEqual("");
 });

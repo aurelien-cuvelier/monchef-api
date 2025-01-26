@@ -2,9 +2,9 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { prisma } from "../../shared";
 import { ApiReturnDataInterface } from "../app";
-import { CreateReviewInput } from "./reviews.types";
 import { createReviewInDb } from "./reviews.service";
 import {
+  CreateReviewInput,
   CreateReviewResponseType,
   GetReviewsResponseType,
   reviewSelect,

@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { CreateRecipeInput } from "../src/api/recipes/recipes.types";
-import { provider, supertestApp } from "./shared";
+import { jabber, provider, supertestApp } from "./shared";
 import {
   fetchIngredientsAndMedata,
   getNewTestData,
@@ -22,10 +22,6 @@ test("Create a new recipe", async () => {
     randomItems.push(pickRandomElementForArray(ingredients));
   }
 
-  const recipeText = `Lorem ipsum odor amet, consectetuer adipiscing elit. Urna cras eros quis nunc interdum proin commodo; at curabitur. Ante malesuada at habitant vel nec consectetur. Suscipit semper integer amet iaculis curae a. Proin nisi condimentum habitant sociosqu diam id libero ante cras. Himenaeos natoque nostra nec scelerisque condimentum per. Senectus vel integer id curabitur cursus nisl auctor. Nullam hendrerit accumsan eros viverra phasellus. Dapibus bibendum adipiscing nisi eros interdum.
-
-Tempus cubilia netus efficitur habitasse faucibus cras. Porta morbi a commodo duis; et augue diam auctor. Mattis sed potenti mi nascetur ac venenatis mus. Semper aliquam penatibus mattis facilisis odio. Nisl phasellus tincidunt porttitor; neque augue interdum. Cras feugiat morbi ultricies eget orci litora gravida. Amet orci fames pulvinar potenti praesent velit curae. Aliquam velit duis maecenas erat mus, bibendum lorem nunc. Viverra integer netus id varius; sollicitudin accumsan interdum rutrum.`;
-
   const payload: CreateRecipeInput = {
     name: testData.testRecipeName,
     duration: Math.floor(Math.random() * 120),
@@ -46,7 +42,7 @@ Tempus cubilia netus efficitur habitasse faucibus cras. Porta morbi a commodo du
       metadata,
       Math.floor(Math.random() * 20)
     ),
-    instructions: recipeText,
+    instructions: jabber.createParagraph(500),
     created_by: testData.userId,
   };
 

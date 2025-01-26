@@ -1,5 +1,5 @@
-import { FastifyRequest, FastifyReply } from "fastify";
-import { StatusCodes, ReasonPhrases } from "http-status-codes";
+import { FastifyReply, FastifyRequest } from "fastify";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { createReviewSchema } from "../reviews/reviews.schema";
 import { CreateReviewInput } from "../reviews/reviews.types";
 import { CreateUserResponseType } from "../users/users.types";
@@ -18,6 +18,7 @@ export async function checkReviewRating(
       .omit({
         description: true,
         reviewedRecipeId: true,
+        title: true,
       })
       .safeParse({ rating });
 

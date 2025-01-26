@@ -30,6 +30,9 @@ export const LOGGER_CONFIG: LoggerOptions = {
         url: req.url,
         params: req.params,
         ["x-wallet-signature"]: req.headers["x-wallet-signature"],
+        host: req.host,
+        remoteAddress: req.ip,
+        remotePort: req.socket.remotePort,
       };
     },
     res(reply) {

@@ -5,7 +5,7 @@ import {
   GetRecipesSuccessfulResponseType,
 } from "../src/api/recipes/recipes.types";
 import { CreateReviewInput } from "../src/api/reviews/reviews.types";
-import { supertestApp } from "./shared";
+import { jabber, supertestApp } from "./shared";
 import {
   fetchRecipes,
   getNewTestData,
@@ -36,10 +36,10 @@ test("Create a new review", async () => {
   const randomRecipe = pickRandomElementForArray(recipes);
 
   const payload: CreateReviewInput = {
-    title: `TEST_REVIEW` + faker.string.sample(5),
+    title: `TEST_REVIEW` + faker.string.alphanumeric(5),
     rating: 1.55, //Not multiple of 0.5
     reviewedRecipeId: randomRecipe.id,
-    description: faker.string.sample({ min: 100, max: 1000 }),
+    description: jabber.createParagraph(500),
   };
 
   let signature = signPayload(testData.testAccount, payload);

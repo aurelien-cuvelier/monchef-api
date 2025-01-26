@@ -5,6 +5,7 @@ import { createReviewSchema } from "./reviews.schema";
 
 export const reviewSelect = {
   id: true,
+  title: true,
   description: true,
   rating: true,
   reviewed_recipe: {
