@@ -9,6 +9,7 @@ import {
   GetReviewsResponseType,
   reviewSelect,
 } from "./reviews.types";
+import { updateRecipeRating } from "../../utils/updateRecipeRating";
 
 export async function getReviewsHandler(
   request: FastifyRequest,
@@ -51,7 +52,11 @@ export async function createReviewHandler(
         .send({ error: res.error, statusCode: res.statusCode });
     }
 
-    return reply.code(StatusCodes.OK).send({ id: res.id, ok });
+
+
+    reply.code(StatusCodes.OK).send({ id: res.id, ok });
+
+    await updateRecipeRating(request.body.reviewedRecipeId)
   } catch (e) {
     request.log.error(e);
     return reply.code(StatusCodes.INTERNAL_SERVER_ERROR).send({

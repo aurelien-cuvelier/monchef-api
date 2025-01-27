@@ -5,6 +5,7 @@ import { createRecipeSchema } from "./recipes.schema";
 
 export const recipeSelect = {
   id: true,
+  overall_rating: true,
   items: {
     select: {
       unit: true,
