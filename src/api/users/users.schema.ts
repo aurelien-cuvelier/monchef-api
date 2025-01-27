@@ -2,6 +2,7 @@ import { buildJsonSchemas } from "fastify-zod";
 import z from "zod";
 
 const userCore = {
+  id: z.number().int(),
   username: z.string(),
   //address: z.string().refine((addr) => EVM_ADDRESS_REGEX.test(addr)),
   /**
@@ -21,22 +22,30 @@ const userCore = {
 
 export const createUserSchema = z.object({
   ...userCore,
-});
+}).omit({id:true});
 
 //Currently data to edit is the same as for creation but partial
 export const editUserSchema = z
   .object({
     ...userCore,
   })
-  .partial();
+  .partial()
+  .omit({ id: true });
 
-//From now not including address in payloads as it creates friction for parsing
-//They should be calculated from signatures
+export const followUserSchema = z
+  .object({
+    ...userCore,
+  })
+  .pick({ id: true });
+
+export const unfollowUserSchema = followUserSchema;
 
 export const { schemas: userSchemas, $ref } = buildJsonSchemas(
   {
     createUserSchema,
     editUserSchema,
+    followUserSchema,
+    unfollowUserSchema,
   },
   {
     $id: "userSchemas",

@@ -4,7 +4,13 @@ import { Web3 } from "web3";
 import { prisma } from "../../shared";
 import { CreateRecipeInput } from "../recipes/recipes.types";
 import { CreateReviewInput } from "../reviews/reviews.types";
-import { CreateUserInput, CreateUserResponseType } from "../users/users.types";
+import {
+  CreateUserInput,
+  CreateUserResponseType,
+  EditUserInput,
+  FollowUserInput,
+  UnfollowUserInput,
+} from "../users/users.types";
 const determStringify = require("fast-json-stable-stringify");
 
 const provider = new Web3(); //provider without RPC because we only wanna use local utils
@@ -12,7 +18,13 @@ const provider = new Web3(); //provider without RPC because we only wanna use lo
 export async function checkWalletSignature(
   request: FastifyRequest<{
     Headers: { "x-wallet-signature": string };
-    Body: CreateUserInput | CreateRecipeInput | CreateReviewInput;
+    Body:
+      | CreateUserInput
+      | CreateRecipeInput
+      | CreateReviewInput
+      | EditUserInput
+      | FollowUserInput
+      | UnfollowUserInput;
   }>,
   reply: FastifyReply<{ Reply: CreateUserResponseType }>
 ) {

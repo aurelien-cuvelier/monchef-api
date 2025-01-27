@@ -1,10 +1,13 @@
 import { FastifyInstance } from "fastify";
 import { $authHeadersRef, requestWithAuthHeaders } from "../auth.schemas";
+import { logRequestBody } from "../middlewares/requestLogging";
 import { checkWalletSignature } from "../middlewares/walletSignature";
 import {
   createUserHandler,
   editUserHandler,
+  followUsersHandler,
   getUsersHandler,
+  unfollowUsersHandler,
 } from "./users.controller";
 import { $ref } from "./users.schema";
 import {
@@ -12,9 +15,12 @@ import {
   CreateUserResponseType,
   EditUserInput,
   EditUserResponseType,
+  FollowUserInput,
+  FollowUserResponseType,
   GetUsersResponseType,
+  UnfollowUserInput,
+  UnfollowUserResponseType,
 } from "./users.types";
-import { logRequestBody } from "../middlewares/requestLogging";
 
 export default async function usersRoutes(
   server: FastifyInstance
@@ -53,6 +59,40 @@ export default async function usersRoutes(
     },
 
     editUserHandler
+  );
+
+  server.post<{
+    Headers: requestWithAuthHeaders;
+    Body: FollowUserInput;
+    Reply: FollowUserResponseType;
+  }>(
+    "/follow",
+    {
+      schema: {
+        body: $ref("followUserSchema"),
+        headers: $authHeadersRef("headerWalletSignatureSchema"),
+      },
+      preHandler: [checkWalletSignature, logRequestBody],
+    },
+
+    followUsersHandler
+  );
+
+  server.post<{
+    Headers: requestWithAuthHeaders;
+    Body: UnfollowUserInput;
+    Reply: UnfollowUserResponseType;
+  }>(
+    "/unfollow",
+    {
+      schema: {
+        body: $ref("unfollowUserSchema"),
+        headers: $authHeadersRef("headerWalletSignatureSchema"),
+      },
+      preHandler: [checkWalletSignature, logRequestBody],
+    },
+
+    unfollowUsersHandler
   );
 
   server.get<{ Reply: GetUsersResponseType }>("/", getUsersHandler);

@@ -6,6 +6,7 @@
     "outDir": "./dist", // Output directory for compiled JavaScript
     "rootDir": "./src", // Root directory for TypeScript source files
     "strict": true, // Enable all strict type-checking options
+    "strictNullChecks": true,
     "esModuleInterop": true, // Interop for importing CommonJS modules
     "skipLibCheck": true, // Speeds up build by skipping checks on `.d.ts` files
     "forceConsistentCasingInFileNames": true, // Enforce consistent file name casing

@@ -1,7 +1,12 @@
-import { Prisma, User } from "@prisma/client";
+import { Follow, Prisma, User } from "@prisma/client";
 import z from "zod";
 import { ApiReturnDataInterface } from "../app";
-import { createUserSchema } from "./users.schema";
+import {
+  createUserSchema,
+  editUserSchema,
+  followUserSchema,
+  unfollowUserSchema,
+} from "./users.schema";
 
 export const userSelect = {
   id: true,
@@ -16,6 +21,9 @@ export const userSelect = {
   _count: {
     select: {
       recipes: true,
+      followers: true,
+      following: true,
+      reviews: true,
     },
   },
   recipes: {
@@ -35,6 +43,16 @@ export const userSelect = {
           name: true,
         },
       },
+    },
+  },
+  followers: {
+    select: {
+      followerId: true,
+    },
+  },
+  following: {
+    select: {
+      followingId: true,
     },
   },
 };
@@ -62,4 +80,20 @@ export type EditUserSuccessfullResponseType = { id: User["id"] } & {
 export type EditUserResponseType =
   ApiReturnDataInterface<EditUserSuccessfullResponseType>;
 
-export type EditUserInput = z.infer<typeof createUserSchema>;
+export type EditUserInput = z.infer<typeof editUserSchema>;
+/**
+ * @DEV For follow/unfollow responses we will return the id of the follower to comply with the other reponse types
+ * as the unique id of this table is not scalar
+ */
+export type FollowUserSuccessfullReponseType = { id: Follow["followerId"] } & {
+  ok: true;
+};
+
+export type FollowUserResponseType =
+  ApiReturnDataInterface<FollowUserSuccessfullReponseType>;
+
+export type UnfollowUserResponseType =
+  ApiReturnDataInterface<FollowUserSuccessfullReponseType>;
+
+export type FollowUserInput = z.infer<typeof followUserSchema>;
+export type UnfollowUserInput = z.infer<typeof unfollowUserSchema>;

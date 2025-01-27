@@ -10,9 +10,105 @@ import {
   CreateUserResponseType,
   EditUserInput,
   EditUserResponseType,
+  FollowUserInput,
+  FollowUserResponseType,
   GetUsersResponseType,
+  UnfollowUserInput,
+  UnfollowUserResponseType,
   userSelect,
 } from "./users.types";
+
+export async function followUsersHandler(
+  request: FastifyRequest<{
+    Body: FollowUserInput;
+  }>,
+  reply: FastifyReply<{
+    Reply: FollowUserResponseType;
+  }>
+) {
+  try {
+    if (!request.userId) {
+      throw new Error(`Request NOT decorated with userId!`);
+    }
+
+    const alreadyExists = await prisma.follow.findUnique({
+      select: {
+        followerId: true,
+        followingId: true,
+      },
+      where: {
+        followerId_followingId: {
+          followerId: request.userId,
+          followingId: request.body.id,
+        },
+      },
+    });
+
+    if (!alreadyExists) {
+      await prisma.follow.create({
+        data: {
+          followerId: request.userId,
+          followingId: request.body.id,
+        },
+      });
+    }
+
+    return reply.code(StatusCodes.OK).send({ ok: true, id: request.userId });
+  } catch (e) {
+    request.log.error(e);
+    return reply.code(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+    });
+  }
+}
+
+export async function unfollowUsersHandler(
+  request: FastifyRequest<{
+    Body: UnfollowUserInput;
+  }>,
+  reply: FastifyReply<{
+    Reply: UnfollowUserResponseType;
+  }>
+) {
+  try {
+    if (!request.userId) {
+      throw new Error(`Request NOT decorated with userId!`);
+    }
+
+    const exists = await prisma.follow.findUnique({
+      select: {
+        followerId: true,
+        followingId: true,
+      },
+      where: {
+        followerId_followingId: {
+          followerId: request.userId,
+          followingId: request.body.id,
+        },
+      },
+    });
+
+    if (exists) {
+      await prisma.follow.delete({
+        where: {
+          followerId_followingId: {
+            followerId: request.userId,
+            followingId: request.body.id,
+          },
+        },
+      });
+    }
+
+    return reply.code(StatusCodes.OK).send({ ok: true, id: request.userId });
+  } catch (e) {
+    request.log.error(e);
+    return reply.code(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      error: ReasonPhrases.INTERNAL_SERVER_ERROR,
+      statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
+    });
+  }
+}
 
 export async function getUsersHandler(
   request: FastifyRequest,
