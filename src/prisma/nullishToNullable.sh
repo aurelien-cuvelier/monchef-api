@@ -23,4 +23,4 @@ fi
 # Use find to locate all .ts files and replace .nullish() with .nullable()
 find "$DIRECTORY" -type f -name "*.ts" -exec sed $SED_OPTS 's/\.nullish()/.nullable()/g' {} +
 
-echo isouuuu
+echo nullishToNullable done
