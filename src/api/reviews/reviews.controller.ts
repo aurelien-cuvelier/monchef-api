@@ -52,11 +52,9 @@ export async function createReviewHandler(
         .send({ error: res.error, statusCode: res.statusCode });
     }
 
-
-
     reply.code(StatusCodes.OK).send({ id: res.id, ok });
 
-    await updateRecipeRating(request.body.reviewedRecipeId)
+    await updateRecipeRating(request.body.reviewedRecipeId);
   } catch (e) {
     request.log.error(e);
     return reply.code(StatusCodes.INTERNAL_SERVER_ERROR).send({

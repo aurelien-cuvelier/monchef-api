@@ -5,11 +5,15 @@ import { $ref, getMetadataResponseType } from "./metadata.schema";
 export default async function metadataRoutes(
   server: FastifyInstance
 ): Promise<void> {
-  server.get<{ Reply: getMetadataResponseType }>("/",{
-    schema:{
-      response:{
-        "200":$ref("getMetadataResponseSchema")
-      }
-    }
-  }, getMetadataHandler);
+  server.get<{ Reply: getMetadataResponseType }>(
+    "/",
+    {
+      schema: {
+        response: {
+          "200": $ref("getMetadataResponseSchema"),
+        },
+      },
+    },
+    getMetadataHandler
+  );
 }

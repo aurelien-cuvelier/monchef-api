@@ -75,6 +75,9 @@ importers:
       pino-pretty:
         specifier: ^13.0.0
         version: 13.0.0
+      prettier:
+        specifier: ^3.4.2
+        version: 3.4.2
       supertest:
         specifier: ^7.0.0
         version: 7.0.0
@@ -1723,6 +1726,11 @@ packages:
   possible-typed-array-names@1.0.0:
     resolution: {integrity: sha512-d7Uw+eZoloe0EHDIYoe+bQ5WXnGMOpmiZFTuMWCwpjzzkL2nTjcKiAk4hh8TjnGye2TwWOk3UXucZ+3rbmBa8Q==}
     engines: {node: '>= 0.4'}
+
+  prettier@3.4.2:
+    resolution: {integrity: sha512-e9MewbtFo+Fevyuxn/4rrcDAaq0IYxPGLvObpQjiZBMAzB9IGmzlnG9RZy3FFas+eBMu2vA0CszMeduow5dIuQ==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   pretty-format@29.7.0:
     resolution: {integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ==}
@@ -4294,6 +4302,8 @@ snapshots:
       find-up: 4.1.0
 
   possible-typed-array-names@1.0.0: {}
+
+  prettier@3.4.2: {}
 
   pretty-format@29.7.0:
     dependencies:

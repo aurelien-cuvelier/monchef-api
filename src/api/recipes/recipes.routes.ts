@@ -23,9 +23,9 @@ export default async function recipesRoutes(
       schema: {
         body: $ref("createRecipeSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
-        response:{
-          "200":$ref("createRecipeReponseSchema")
-        }
+        response: {
+          "200": $ref("createRecipeReponseSchema"),
+        },
       },
       preHandler: [checkWalletSignature],
     },

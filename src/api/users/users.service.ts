@@ -35,8 +35,8 @@ export async function createUserInDb(
     const alreadyExists = exists[0]?.id
       ? `Address`
       : exists?.[1]
-      ? `Username`
-      : null;
+        ? `Username`
+        : null;
 
     if (alreadyExists) {
       return {
