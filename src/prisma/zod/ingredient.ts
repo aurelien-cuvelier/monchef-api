@@ -1,15 +1,15 @@
-import * as z from "zod"
-import { CompleteRecipe_item, RelatedRecipe_itemModel } from "./index"
+import * as z from "zod";
+import { CompleteRecipe_item, RelatedRecipe_itemModel } from "./index";
 
 export const IngredientModel = z.object({
   id: z.number().int(),
   name: z.string(),
-  description: z.string().nullish(),
-  thumbnail: z.string().nullish(),
-})
+  description: z.string().nullable(),
+  thumbnail: z.string().nullable(),
+});
 
 export interface CompleteIngredient extends z.infer<typeof IngredientModel> {
-  used_in: CompleteRecipe_item[]
+  used_in: CompleteRecipe_item[];
 }
 
 /**
@@ -17,6 +17,9 @@ export interface CompleteIngredient extends z.infer<typeof IngredientModel> {
  *
  * NOTE: Lazy required in case of potential circular dependencies within schema
  */
-export const RelatedIngredientModel: z.ZodSchema<CompleteIngredient> = z.lazy(() => IngredientModel.extend({
-  used_in: RelatedRecipe_itemModel.array(),
-}))
+export const RelatedIngredientModel: z.ZodSchema<CompleteIngredient> = z.lazy(
+  () =>
+    IngredientModel.extend({
+      used_in: RelatedRecipe_itemModel.array(),
+    })
+);
