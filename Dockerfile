@@ -13,7 +13,7 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
-run pnpm run generate
+run pnpm run prisma:generate
 
 #RUN npm run build
 
