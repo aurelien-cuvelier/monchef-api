@@ -9,7 +9,7 @@
 
 
 # Define the directory (default to "zod" if not passed)
-DIRECTORY="${1:-zod}"
+DIRECTORY="${1:-src/prisma/zod}"
 
 # Check if running on macOS or Linux and set sed options accordingly
 if [[ "$OSTYPE" == "darwin"* ]]; then

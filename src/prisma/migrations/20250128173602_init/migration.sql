@@ -73,6 +73,7 @@ CREATE TABLE "recipe_items" (
 CREATE TABLE "reviews" (
     "id" SERIAL NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "title" TEXT NOT NULL,
     "rating" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "description" TEXT,
     "reviewed_by_user_id" INTEGER NOT NULL,

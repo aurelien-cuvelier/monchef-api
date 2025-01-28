@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node ./src/index.ts | npx pino-pretty",
+    "prisma:generate": "npx prisma generate --schema src/prisma/schema.prisma && ./src/prisma/nullishToNullable.sh && npx prettier --write ./src/prisma/zod",
+    "prisma:migrate": "cd src/prisma/ && npx prisma migrate dev --skip-generate",
     "format": "npx prettier --write .",
     "prod": "tsc && node ./dist/index.js",
-    "test": "npx jest"
+    "test": "npx jest tests/main.test.ts"
   },
   "keywords": [],
   "author": "",
