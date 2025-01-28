@@ -1,9 +1,9 @@
 import * as z from "zod";
 import {
-  CompleteRecipe,
   CompleteUser,
-  RelatedRecipeModel,
   RelatedUserModel,
+  CompleteRecipe,
+  RelatedRecipeModel,
 } from "./index";
 
 export const CountryModel = z.object({

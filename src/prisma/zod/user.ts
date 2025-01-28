@@ -1,14 +1,14 @@
-import { Chef_ranks } from "@prisma/client";
 import * as z from "zod";
+import { Chef_ranks } from "@prisma/client";
 import {
-  CompleteCountry,
-  CompleteFollow,
   CompleteRecipe,
-  CompleteReview,
-  RelatedCountryModel,
-  RelatedFollowModel,
   RelatedRecipeModel,
+  CompleteReview,
   RelatedReviewModel,
+  CompleteCountry,
+  RelatedCountryModel,
+  CompleteFollow,
+  RelatedFollowModel,
 } from "./index";
 
 export const UserModel = z.object({
