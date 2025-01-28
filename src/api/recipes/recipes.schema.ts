@@ -1,64 +1,59 @@
-import { Difficulty, Meal_role, Tags, Units } from "@prisma/client";
 import { buildJsonSchemas } from "fastify-zod";
-import { z } from "zod";
+import z from "zod";
+import {
+  CountryModel,
+  IngredientModel,
+  Recipe_itemModel,
+  RecipeModel,
+  ReviewModel,
+  UserModel,
+} from "../../prisma/zod";
+import {
+  CreateRecipeSuccessfullResponseType,
+  GetRecipesSuccessfulResponseType,
+} from "./recipes.types";
 
-const recipeItemCore = {
-  ingedient_id: z.number().int(),
-  unit: z.enum([
-    Units.GRAM,
-    Units.KILOGRAM,
-    Units.LITER,
-    Units.MILILITER,
-    Units.PIECE,
-    Units.TABLESPOON,
-    Units.TEASPOON,
-  ]),
-  quantity: z.number(),
-  recipe_id: z.number().int(),
-};
+export const createRecipeSchema = RecipeModel.omit({
+  overall_rating: true,
+  created_at: true,
+  updated_at: true,
+  id: true,
+}).extend({
+  items: Recipe_itemModel.omit({ id: true, recipe_id: true }).array(),
+});
 
-const recipeCore = {
-  name: z.string(),
-  description: z.string(),
-  country_a3: z.string().length(3), //alpha-3
-  images: z.array(z.string()),
-  duration: z.number().int(),
-  diffulty: z.enum([Difficulty.EASY, Difficulty.HARD, Difficulty.MEDIUM]),
-  instructions: z.string(),
-  meal_role: z.enum([
-    Meal_role.DESSERT,
-    Meal_role.MAIN_DISH,
-    Meal_role.SIDE_DISH,
-  ]),
-  tags: z.array(
-    z.enum([
-      Tags.VEGAN,
-      Tags.VEGETARIAN,
-      Tags.GLUTEN_FREE,
-      Tags.DAIRY_FREE,
-      Tags.LOW_CARB,
-      Tags.PALEO,
-      Tags.KOSHER,
-      Tags.HALAL,
-    ])
-  ),
-  overall_rating: z.number(), // 1, 1.5, 2, 2.5, ..., 5
+const createRecipeReponseSchema: z.ZodType<CreateRecipeSuccessfullResponseType> =
+  RecipeModel.pick({ id: true }).extend({ ok: z.literal(true) });
 
-  created_by: z.number().int(),
-
-  items: z.array(z.object(recipeItemCore).omit({ recipe_id: true })),
-};
-
-export const createRecipeSchema = z
-  .object({
-    ...recipeCore,
-  })
-  .omit({ overall_rating: true })
-  .strict();
+const getRecipesReponseSchema: z.ZodType<GetRecipesSuccessfulResponseType> =
+  RecipeModel.pick({ id: true, overall_rating: true })
+    .extend({
+      items: Recipe_itemModel.pick({ unit: true, quantity: true })
+        .extend({ ingredient: IngredientModel.pick({ name: true, id: true }) })
+        .array(),
+      recipe_country: CountryModel.pick({ name: true, a3: true }),
+      recipe_creator: UserModel.pick({
+        username: true,
+        chef_rank: true,
+      }).extend({
+        country: CountryModel.pick({ name: true, a3: true }),
+      }),
+      reviews: ReviewModel.pick({
+        id: true,
+        created_at: true,
+        rating: true,
+        description: true,
+      })
+        .extend({ reviewer: UserModel.pick({ id: true, username: true }) })
+        .array(),
+    })
+    .array();
 
 export const { schemas: recipeSchemas, $ref } = buildJsonSchemas(
   {
     createRecipeSchema,
+    createRecipeReponseSchema,
+    getRecipesReponseSchema,
   },
   {
     $id: "recipeSchemas",

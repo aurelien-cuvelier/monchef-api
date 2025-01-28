@@ -4,7 +4,13 @@ import { FollowModel } from "../../prisma/zod/follow";
 import { RecipeModel } from "../../prisma/zod/recipe";
 import { ReviewModel } from "../../prisma/zod/review";
 import { UserModel } from "../../prisma/zod/user";
-import { GetUserSuccessfullReponseType } from "./users.types";
+import {
+  CreateUserResponseType,
+  EditUserResponseType,
+  FollowUserResponseType,
+  GetUserSuccessfullReponseType,
+  UnfollowUserResponseType,
+} from "./users.types";
 
 // const userCore = {
 //   id: z.number().int(),
@@ -87,6 +93,18 @@ export const getUsersResponseSchema: z.ZodType<GetUserSuccessfullReponseType> =
     })
   );
 
+export const createUserResponseSchema: z.ZodType<CreateUserResponseType> =
+  UserModel.pick({ id: true }).extend({ ok: z.literal(true) });
+
+export const editUserResponseSchema: z.ZodType<EditUserResponseType> =
+  UserModel.pick({ id: true }).extend({ ok: z.literal(true) });
+
+export const followUserResponseSchema: z.ZodType<FollowUserResponseType> =
+  UserModel.pick({ id: true }).extend({ ok: z.literal(true) });
+
+export const unfollowUserResponseSchema: z.ZodType<UnfollowUserResponseType> =
+  UserModel.pick({ id: true }).extend({ ok: z.literal(true) });
+
 export const { schemas: userSchemas, $ref } = buildJsonSchemas(
   {
     createUserSchema,
@@ -94,6 +112,10 @@ export const { schemas: userSchemas, $ref } = buildJsonSchemas(
     followUserSchema,
     unfollowUserSchema,
     getUsersResponseSchema,
+    createUserResponseSchema,
+    editUserResponseSchema,
+    followUserResponseSchema,
+    unfollowUserResponseSchema,
   },
   {
     $id: "userSchemas",

@@ -9,7 +9,9 @@ import { LOGGER_CONFIG } from "../shared";
 import { authHeadersSchemas } from "./auth.schemas";
 import "./fastifyModules";
 import ingredientsRoutes from "./ingredients/ingredients.routes";
+import { ingredientsSchema } from "./ingredients/ingredients.schema";
 import metadataRoutes from "./metadata/metadata.routes";
+import { metadataSchemas } from "./metadata/metadata.schema";
 import recipesRoutes from "./recipes/recipes.routes";
 import { recipeSchemas } from "./recipes/recipes.schema";
 import reviewsRoutes from "./reviews/reviews.routes";
@@ -56,6 +58,8 @@ for (const schema of [
   ...userSchemas,
   ...recipeSchemas,
   ...reviewSchemas,
+  ...ingredientsSchema,
+  ...metadataSchemas,
 
   ...authHeadersSchemas,
 ]) {

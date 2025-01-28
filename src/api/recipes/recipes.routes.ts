@@ -23,11 +23,24 @@ export default async function recipesRoutes(
       schema: {
         body: $ref("createRecipeSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
+        response:{
+          "200":$ref("createRecipeReponseSchema")
+        }
       },
       preHandler: [checkWalletSignature],
     },
     createRecipeHandler
   );
 
-  server.get<{ Reply: GetRecipesResponseType }>("/", getRecipesHandler);
+  server.get<{ Reply: GetRecipesResponseType }>(
+    "/",
+    {
+      schema: {
+        response: {
+          "200": $ref("getRecipesReponseSchema"),
+        },
+      },
+    },
+    getRecipesHandler
+  );
 }

@@ -37,6 +37,9 @@ export default async function usersRoutes(
       schema: {
         body: $ref("createUserSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
+        response: {
+          "200": $ref("createUserResponseSchema"),
+        },
       },
       preHandler: [checkWalletSignature, logRequestBody],
     },
@@ -54,6 +57,9 @@ export default async function usersRoutes(
       schema: {
         body: $ref("editUserSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
+        response: {
+          "200": $ref("editUserResponseSchema"),
+        },
       },
       preHandler: [checkWalletSignature, logRequestBody],
     },
@@ -71,6 +77,9 @@ export default async function usersRoutes(
       schema: {
         body: $ref("followUserSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
+        response: {
+          "200": $ref("followUserResponseSchema"),
+        },
       },
       preHandler: [checkWalletSignature, logRequestBody],
     },
@@ -88,6 +97,9 @@ export default async function usersRoutes(
       schema: {
         body: $ref("unfollowUserSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
+        response: {
+          "200": $ref("unfollowUserResponseSchema"),
+        },
       },
       preHandler: [checkWalletSignature, logRequestBody],
     },
@@ -100,7 +112,7 @@ export default async function usersRoutes(
     {
       schema: {
         response: {
-          "2xx": $ref("getUsersResponseSchema"),
+          "200": $ref("getUsersResponseSchema"),
         },
       },
     },

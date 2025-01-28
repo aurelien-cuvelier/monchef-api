@@ -24,6 +24,9 @@ export default async function reviewsRoutes(
       schema: {
         body: $ref("createReviewSchema"),
         headers: $authHeadersRef("headerWalletSignatureSchema"),
+        response: {
+          "200": $ref("createReviewResponseSchema"),
+        },
       },
       preHandler: [checkWalletSignature, checkReviewRating],
     },
@@ -31,5 +34,15 @@ export default async function reviewsRoutes(
     createReviewHandler
   );
 
-  server.get<{ Reply: GetReviewsResponseType }>("/", getReviewsHandler);
+  server.get<{ Reply: GetReviewsResponseType }>(
+    "/",
+    {
+      schema: {
+        response: {
+          "200": $ref("getReviewsResponseSchema"),
+        },
+      },
+    },
+    getReviewsHandler
+  );
 }
