@@ -2,6 +2,30 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// generator zod {
+//   provider       = "zod-prisma-types"
+//     output                           = "./generated/zod"
+//   addIncludeType                   = false
+//   addSelectType                    = false 
+//   createRelationValuesTypes        = true
+// }
+
+generator zod {
+  provider                 = "zod-prisma"
+  output                   = "./zod" // (default) the directory where generated zod schemas will be saved
+
+  relationModel            = true // (default) Create and export both plain and related models.
+
+  modelSuffix              = "Model" // (default) Suffix to apply to your prisma models when naming Zod schemas
+
+  // useDecimalJs          = false // (default) represent the prisma Decimal type using as a JS number
+  useDecimalJs             = true // represent the prisma Decimal type using Decimal.js (as Prisma does)
+
+  // https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-by-null-values
+  prismaJsonNullability    = false // (default) uses prisma's scheme for JSON field nullability
+  // prismaJsonNullability = false // allows null assignment to optional JSON fields
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

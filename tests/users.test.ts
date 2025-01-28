@@ -15,7 +15,11 @@ test("Create a new user", async () => {
 
   const payload: CreateUserInput = {
     username: testData.testUsername,
+    avatar: null,
+    bio: null,
     country_a3: "USA",
+    twitter: null,
+    discord: null,
   };
 
   let response = await supertestApp.post("/users/create").send(payload);

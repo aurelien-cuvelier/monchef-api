@@ -95,5 +95,15 @@ export default async function usersRoutes(
     unfollowUsersHandler
   );
 
-  server.get<{ Reply: GetUsersResponseType }>("/", getUsersHandler);
+  server.get<{ Reply: GetUsersResponseType }>(
+    "/",
+    {
+      schema: {
+        response: {
+          "2xx": $ref("getUsersResponseSchema"),
+        },
+      },
+    },
+    getUsersHandler
+  );
 }

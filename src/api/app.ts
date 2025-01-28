@@ -1,3 +1,5 @@
+import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 import { fastify } from "fastify";
 import { StatusCodes } from "http-status-codes";
 import { duration } from "itty-time";
@@ -29,6 +31,23 @@ const STARTED_AT = Date.now();
 
 const server = fastify({
   logger: LOGGER_CONFIG,
+});
+
+server.register(swagger, {
+  openapi: {
+    info: {
+      title: "API Documentation",
+      description: "Generated API docs",
+      version: "1.0.0",
+    },
+  },
+});
+
+server.register(swaggerUi, {
+  routePrefix: "/docs",
+  uiConfig: {
+    docExpansion: "full",
+  },
 });
 
 //Add schemas BEFORE register the route or it won't work

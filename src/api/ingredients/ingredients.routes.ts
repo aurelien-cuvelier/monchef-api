@@ -1,9 +1,12 @@
 import { FastifyInstance } from "fastify";
 import { getIngredientsHandler } from "./ingredients.controller";
-import { getIngredientsResponseType } from "./ingredients.schema";
+import { GetIngredientsApiReponseType } from "./ingredients.types";
 
 export default async function ingredientsRoutes(
   server: FastifyInstance
 ): Promise<void> {
-  server.get<{ Reply: getIngredientsResponseType }>("/", getIngredientsHandler);
+  server.get<{ Reply: GetIngredientsApiReponseType }>(
+    "/",
+    getIngredientsHandler
+  );
 }

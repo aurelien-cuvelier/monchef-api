@@ -2,22 +2,20 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { prisma } from "../../shared";
 import { ApiReturnDataInterface } from "../app";
-import { getIngredientsResponseType } from "./ingredients.schema";
+import {
+  GetIngredientsApiReponseType,
+  ingredientsSelect,
+} from "./ingredients.types";
 
 export async function getIngredientsHandler(
   request: FastifyRequest,
   reply: FastifyReply<{
-    Reply: ApiReturnDataInterface<getIngredientsResponseType>;
+    Reply: ApiReturnDataInterface<GetIngredientsApiReponseType>;
   }>
 ) {
   try {
     const ingredients = await prisma.ingredient.findMany({
-      select: {
-        name: true,
-        description: true,
-        thumbnail: true,
-        id: true,
-      },
+      select: ingredientsSelect,
     });
 
     return reply.code(StatusCodes.OK).send(ingredients);

@@ -142,7 +142,6 @@ export async function createUserHandler(
       throw new Error(`Request NOT decorated with address!`);
     }
 
-    request.body = createUserSchema.parse(request.body);
     const res = await createUserInDb(request.body, request.address);
     const { ok } = res;
 

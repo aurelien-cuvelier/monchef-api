@@ -1,10 +1,4 @@
-import { Ingredient } from "@prisma/client";
-import { ApiReturnDataInterface } from "../app";
+import { IngredientModel } from "../../prisma/zod";
 
-export type getIngredientsSuccessfullResponseType = Pick<
-  Ingredient,
-  "name" | "description" | "thumbnail" | "id"
->[];
 
-export type getIngredientsResponseType =
-  ApiReturnDataInterface<getIngredientsSuccessfullResponseType>;
+export const getIngredientsResponseSchema = IngredientModel.pick({id:true})

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Web3Account } from "web3";
-import { getIngredientsSuccessfullResponseType } from "../src/api/ingredients/ingredients.schema";
+import { GetIngredientsSuccessfullReponseType } from "../src/api/ingredients/ingredients.types";
 import { getMetadataSuccessfullResponseType } from "../src/api/metadata/metadata.schema";
 import {
   CreateRecipeInput,
@@ -40,6 +40,10 @@ export async function getNewTestData<T extends boolean>(
   const payload: CreateUserInput = {
     username: testUsername,
     country_a3: "USA",
+    avatar: null,
+    bio: null,
+    twitter: null,
+    discord: null,
   };
 
   const signature = signPayload(testAccount, payload);
@@ -72,10 +76,10 @@ export async function getNewTestData<T extends boolean>(
 }
 
 export async function fetchIngredientsAndMedata(): Promise<{
-  ingredients: getIngredientsSuccessfullResponseType;
+  ingredients: GetIngredientsSuccessfullReponseType;
   metadata: getMetadataSuccessfullResponseType;
 }> {
-  const resIngredients = await axios.get<getIngredientsSuccessfullResponseType>(
+  const resIngredients = await axios.get<GetIngredientsSuccessfullReponseType>(
     APP_URL + "/ingredients"
   );
 
@@ -109,7 +113,7 @@ export function pickRandomElementForArray<T>(arr: Array<T>): T {
 }
 
 export function getRandomIngredientItems(
-  ingredients: getIngredientsSuccessfullResponseType,
+  ingredients: GetIngredientsSuccessfullReponseType,
   metadata: getMetadataSuccessfullResponseType,
   amount: number
 ): CreateRecipeInput["items"] {
