@@ -14,9 +14,6 @@ globalLogger.info(
   `New backend instance starting [IS_PRODUCTION: ${IS_PRODUCTION}]`
 );
 
-//this won't pass tsc
-const myNumber: number = "5";
-
 if (START_APP) {
   startApp();
 }
