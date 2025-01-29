@@ -31,7 +31,7 @@ services:
       - "8080:8080"
     command: >
       bash -c "
-        pnpm run prisma:migrate deploy &&
+        pnpm run prisma:migrate &&
         pnpm run dev
       "
     networks:
