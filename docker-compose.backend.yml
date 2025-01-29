@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  backend:
+    build: .
+    container_name: test_api
+    environment:
+      DATABASE_URL: "postgresql://testuser:testpassword@postgres:5432/testdb?schema=public"
+      APP_PORT: 8080
+    ports:
+      - "8080:8080"
+    command: >
+      bash -c "
+        pnpm run prisma:migrate deploy &&
+        pnpm run dev
+      "

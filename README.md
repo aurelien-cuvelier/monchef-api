@@ -5,6 +5,7 @@
 Foodelics is a Monad native platform designed to bring food enthusiasts together by combining recipe sharing, restaurant recommendations, and food photo posting into a single, rewarding experience. It eliminates the need for multiple apps by creating a unified space where users can connect, share their culinary adventures, and be rewarded for their contributions through tokens or NFTs. With a focus on authentic, community-driven content, Foodelics aims to build a vibrant ecosystem for food lovers while leveraging blockchain for transparency and engagement.
 
 ### Stack
+
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
@@ -17,7 +18,8 @@ Foodelics is a Monad native platform designed to bring food enthusiasts together
 
 - Node.js (version specified in `Dockerfile`)
 - pnpm (version specified in `package.json`)
-- A Postgresql database
+- A Postgresql database (can be deployed locally with included docker-compose files)
+- Docker-compose (if you want to deploy locally)
 - Fly.io account (if you want to deploy following the current workflow)
 
 ## Setup
@@ -34,13 +36,13 @@ Foodelics is a Monad native platform designed to bring food enthusiasts together
    ```
    pnpm install
    ```
-   
+
 3. Generate Prisma models & zod objects
 
    ```
    pnpm run prisma:generate
    ```
-   
+
 4. Set up environment variables:
    Create a `.env` file in the root directory following the .env.example model:
 
@@ -56,9 +58,10 @@ Foodelics is a Monad native platform designed to bring food enthusiasts together
    ```
    pnpm run prisma:migrate
    ```
-   
+
 6. Start the backend:
    This will automatically initialize some data in the database if it is reachable
+
    ```
    pnpm run dev
    ```
@@ -68,18 +71,35 @@ Foodelics is a Monad native platform designed to bring food enthusiasts together
    pnpm run test
    ```
 
+## Deploy with docker-compose
+
+```
+#Deploy both the database AND the backend
+docker-compose up
+
+#Deploy ONLY the database
+docker-compose -f docker-compose.db.yml up
+
+#Deploy ONLY the backend (external DB required)
+docker-compose -f docker-compose.backend.yml up
+```
+
 ## Format code
+
 ```
 pnpm run format
 ```
 
 ## API Documentation
+
 The API is implementing swagger which can be accessed at:
+
 ```
 http://localhost:APP_PORT/docs
 ```
 
 ## Project structure
+
 ```
 📦
 ├─ .dockerignore
