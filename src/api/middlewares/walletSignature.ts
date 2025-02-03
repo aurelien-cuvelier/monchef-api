@@ -2,6 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import { Web3 } from "web3";
 import { prisma } from "../../shared";
+import { CreateIngredientInput } from "../ingredients/ingredients.types";
 import { CreateRecipeInput } from "../recipes/recipes.types";
 import { CreateReviewInput } from "../reviews/reviews.types";
 import {
@@ -24,7 +25,8 @@ export async function checkWalletSignature(
       | CreateReviewInput
       | EditUserInput
       | FollowUserInput
-      | UnfollowUserInput;
+      | UnfollowUserInput
+      | CreateIngredientInput;
   }>,
   reply: FastifyReply<{ Reply: CreateUserResponseType }>
 ) {

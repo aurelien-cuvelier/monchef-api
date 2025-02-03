@@ -190,6 +190,9 @@ model Ingredient {
   description String?
   thumbnail   String?
 
+  //Not a foreign key as default ingredients are added by nobody but still useful to track user-added rows
+  created_by_user_id Int?
+
   //An ingredient can be used in several recipe items
   used_in Recipe_item[]
 

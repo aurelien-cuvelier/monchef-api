@@ -88,6 +88,7 @@ CREATE TABLE "ingredients" (
     "name" TEXT NOT NULL,
     "description" TEXT,
     "thumbnail" TEXT,
+    "created_by_user_id" INTEGER,
 
     CONSTRAINT "ingredients_pkey" PRIMARY KEY ("id")
 );

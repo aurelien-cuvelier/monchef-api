@@ -6,6 +6,7 @@ export const IngredientModel = z.object({
   name: z.string(),
   description: z.string().nullable(),
   thumbnail: z.string().nullable(),
+  created_by_user_id: z.number().int().nullable(),
 });
 
 export interface CompleteIngredient extends z.infer<typeof IngredientModel> {

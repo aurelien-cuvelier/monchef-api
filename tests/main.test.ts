@@ -3,6 +3,7 @@ import "./follows.test";
 import "./recipes.test";
 import "./reviews.test";
 import "./users.test";
+import "./ingredients.test";
 
 /**
  * @DEV
